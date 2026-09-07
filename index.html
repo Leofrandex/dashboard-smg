@@ -1,0 +1,213 @@
+﻿<title>Tableros — Bernard Kizer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f2f2ee; --surface:#fbfbfa; --surface-2:#f6f6f3;
+  --ink:#14161a; --ink-2:#565b62; --muted:#8b9098;
+  --line:#e2e2db; --line-soft:#ecece6;
+  --accent:#1c4f8f; --accent-soft:rgba(28,79,143,.10);
+  --ring:rgba(20,22,26,.10);
+  --shadow:0 1px 2px rgba(20,22,26,.05), 0 8px 24px -18px rgba(20,22,26,.35);
+  --shadow-lift:0 2px 4px rgba(20,22,26,.06), 0 18px 40px -24px rgba(20,22,26,.5);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --plane:#0d0f12; --surface:#16181c; --surface-2:#1b1e23;
+    --ink:#f1f2f4; --ink-2:#a8aeb6; --muted:#7f858d;
+    --line:#262a30; --line-soft:#1f2228;
+    --accent:#7fb0ee; --accent-soft:rgba(127,176,238,.12);
+    --ring:rgba(255,255,255,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+    --shadow-lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -24px rgba(0,0,0,1);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0d0f12; --surface:#16181c; --surface-2:#1b1e23;
+  --ink:#f1f2f4; --ink-2:#a8aeb6; --muted:#7f858d;
+  --line:#262a30; --line-soft:#1f2228;
+  --accent:#7fb0ee; --accent-soft:rgba(127,176,238,.12);
+  --ring:rgba(255,255,255,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -24px rgba(0,0,0,1);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--plane); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif; text-wrap:balance; margin:0; letter-spacing:-.02em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+header.top{background:var(--surface);border-bottom:1px solid var(--line);padding:44px 0 34px}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;
+}
+header.top h1{font-size:clamp(28px,4.2vw,42px);line-height:1.08;font-weight:700}
+header.top .sub{margin:14px 0 0;font-size:18px;color:var(--ink-2);max-width:64ch}
+
+main{padding:44px 0 12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;align-items:start}
+
+.card{
+  display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--line);border-radius:9px;
+  box-shadow:var(--shadow);overflow:hidden;
+  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+}
+.card:hover,.card:focus-within{box-shadow:var(--shadow-lift);border-color:var(--ring);transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){ .card{transition:none} .card:hover,.card:focus-within{transform:none} }
+
+.card-head{padding:20px 22px 0}
+.badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+.badge{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;
+  padding:3px 8px;border-radius:4px;border:1px solid var(--line);color:var(--muted);
+}
+.badge.now{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:600}
+.card h2{font-size:23px;font-weight:700;line-height:1.18}
+.card .tagline{margin:7px 0 0;color:var(--ink-2);font-size:15px}
+
+.facts{display:flex;flex-wrap:wrap;gap:0;margin:18px 0 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.facts div{flex:1 1 140px;padding:11px 22px;border-right:1px solid var(--line-soft)}
+.facts div:last-child{border-right:none}
+.facts dt{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 3px}
+.facts dd{margin:0;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+
+.card-body{padding:19px 22px 22px;display:flex;flex-direction:column;gap:19px;flex:1}
+.approach{margin:0;color:var(--ink-2);font-size:14.5px}
+
+.list-label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 9px;
+}
+ul.blocks{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+ul.blocks li{position:relative;padding-left:16px;font-size:14px;color:var(--ink-2)}
+ul.blocks li::before{content:"";position:absolute;left:2px;top:.62em;width:5px;height:1px;background:var(--muted)}
+
+.only{background:var(--surface-2);border:1px solid var(--line-soft);border-radius:6px;padding:14px 16px}
+.only ul.blocks li{color:var(--ink);font-weight:500}
+.only ul.blocks li::before{background:var(--accent);width:6px;height:2px;top:.58em}
+
+.card-foot{margin-top:auto;padding:0 22px 22px}
+a.open{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:Archivo,sans-serif;font-size:15px;font-weight:600;
+  color:var(--surface);background:var(--accent);
+  text-decoration:none;padding:10px 17px;border-radius:6px;
+}
+a.open:hover{filter:brightness(1.08)}
+a.open:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+a.open .arr{font-family:"IBM Plex Mono",monospace;transition:transform .18s ease}
+.card:hover a.open .arr{transform:translateX(3px)}
+@media (prefers-reduced-motion:reduce){ .card:hover a.open .arr{transform:none} }
+
+footer{border-top:1px solid var(--line-soft);margin-top:34px;padding:26px 0 44px;color:var(--muted);font-size:13px}
+footer p{margin:0 0 7px;max-width:76ch}
+footer code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-2)}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow">SMG · AI Growth</p>
+    <h1>Dos lecturas del mismo embudo</h1>
+    <p class="sub">Cada versión del reporte mide cosas distintas. Se mantienen las dos publicadas a propósito, para decidir con evidencia qué métricas merecen sobrevivir a la siguiente.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="cards">
+          <article class="card">
+        <div class="card-head">
+          <div class="badges"><span class="badge now">Versión actual</span><span class="badge">v2</span></div>
+          <h2>Señal y silencio</h2>
+          <p class="tagline">El volumen no es el problema</p>
+        </div>
+        <dl class="facts">
+          <div><dt>Ventana</dt><dd>21 ago – 4 sep 2026 · 14 días</dd></div>
+          <div><dt>Escala</dt><dd>5.897 conversaciones</dd></div>
+        </dl>
+        <div class="card-body">
+          <p class="approach">Reconstruye el embudo hilo por hilo: cada conversación leída mensaje a mensaje, con latencias reales y no estimadas. La atribución sale de la firma que el trigger link deja en el primer mensaje del lead.</p>
+          <div>
+            <p class="list-label">Qué mide</p>
+            <ul class="blocks">
+          <li>Conversaciones abiertas, respondidas y continuadas</li>
+          <li>Timeline diaria apilada por canal</li>
+          <li>Canal y número de entrada</li>
+          <li>Fuentes de tráfico cruzadas con agenda</li>
+          <li>Embudo del agente de IA, global y por fuente</li>
+          <li>Latencia del lead y la nuestra, por separado</li>
+          <li>Hora y día de apertura</li>
+          <li>Campañas salientes y citas por closer</li>
+          <li>Países de la ventana y de la base entera</li>
+            </ul>
+          </div>
+        <div class="only">
+          <p class="list-label">Solo esta versión tiene</p>
+          <ul class="blocks">
+            <li>Profundidad de conversación (≥4, ≥6, ≥20 mensajes)</li>
+            <li>Atribución por firma de trigger link</li>
+            <li>Los ~106 k contactos de la base completa por país</li>
+          </ul>
+        </div>
+        </div>
+        <div class="card-foot">
+          <a class="open" href="/v2">Abrir el tablero <span class="arr">-&gt;</span></a>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div class="badges"><span class="badge">Versión anterior</span><span class="badge">v1</span></div>
+          <h2>De 1.607 mensajes a 7 agendas</h2>
+          <p class="tagline">La lectura desde el envío saliente</p>
+        </div>
+        <dl class="facts">
+          <div><dt>Ventana</dt><dd>22 jul – 21 ago 2026 · 30 días</dd></div>
+          <div><dt>Escala</dt><dd>1.607 mensajes salientes</dd></div>
+        </dl>
+        <div class="card-body">
+          <p class="approach">Parte del envío, no de la conversación: cuántos mensajes salieron, cuántos llegaron de verdad y qué pasó después. Mide el rendimiento de la campaña, no el del hilo.</p>
+          <div>
+            <p class="list-label">Qué mide</p>
+            <ul class="blocks">
+          <li>Mensajes salientes: cuántos salieron y cuántos llegaron</li>
+          <li>Latencia de la primera respuesta</li>
+          <li>La distribución bimodal: o no contestan, o hablan mucho</li>
+          <li>Cuánto tarda el bot en agendar</li>
+          <li>Países que más responden</li>
+          <li>Rendimiento por tag de campaña</li>
+          <li>Hora y día del disparo</li>
+          <li>Qué más vale la pena medir</li>
+            </ul>
+          </div>
+        <div class="only">
+          <p class="list-label">Solo esta versión tiene</p>
+          <ul class="blocks">
+            <li>Entrega real de los envíos salientes</li>
+            <li>Rendimiento cortado por tag de campaña</li>
+            <li>Tiempo del bot desde el primer contacto hasta la agenda</li>
+          </ul>
+        </div>
+        </div>
+        <div class="card-foot">
+          <a class="open" href="/v1">Abrir el tablero <span class="arr">-&gt;</span></a>
+        </div>
+      </article>
+  </div>
+</main>
+
+<footer class="wrap">
+  <p>Cifras agregadas: estas páginas no publican nombres, teléfonos ni correos de leads.</p>
+  <p>Los datos de la versión actual llegan hasta el <code>2026-09-04</code>.</p>
+</footer>
