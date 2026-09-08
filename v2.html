@@ -1,4 +1,4 @@
-﻿<title>Señal y Silencio</title>
+﻿<title>SMG AI Agent Hub</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,6 +154,42 @@ tr.tot td{border-top:2px solid var(--line);font-weight:600;background:var(--surf
 footer{background:var(--surface);border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ---------- resumen ---------- */
+#resumen{background:var(--surface);border-bottom:1px solid var(--line);padding-top:38px}
+#sum-title{font-size:clamp(20px,2.6vw,26px);font-weight:600;max-width:34ch}
+.verdicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px;margin-top:6px}
+.verdict{
+  background:var(--plane);border:1px solid var(--line);border-radius:8px;
+  padding:16px 18px;border-left:3px solid var(--muted);
+}
+.verdict.good{border-left-color:var(--good)}
+.verdict.warn{border-left-color:var(--warn)}
+.verdict.crit{border-left-color:var(--crit)}
+.verdict .vh{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 7px;
+}
+.verdict .vn{font-family:Archivo,sans-serif;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1;margin:0 0 6px}
+.verdict.good .vn{color:var(--good-ink)} .verdict.warn .vn{color:var(--warn-ink)} .verdict.crit .vn{color:var(--crit-ink)}
+.verdict p{margin:0;font-size:14px;color:var(--ink-2)}
+.verdict strong{color:var(--ink)}
+.next{margin-top:20px;background:var(--plane);border:1px solid var(--line);border-radius:8px;padding:18px 20px}
+.next h3{font-size:15px;font-weight:600;margin:0 0 11px}
+.next ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.next li{font-size:14.5px;color:var(--ink-2)}
+.next li strong{color:var(--ink)}
+
+/* ---------- podado de tablas largas ---------- */
+tr.beyond{display:none}
+table.show-all tr.beyond{display:table-row}
+.more-btn{
+  margin:9px 0 0;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1px solid var(--line);border-radius:5px;
+  padding:6px 12px;color:var(--ink-2);cursor:pointer;
+}
+.more-btn:hover{color:var(--accent);border-color:var(--accent)}
+
 /* ---------- capa de interacción ---------- */
 #tip{
   position:fixed;z-index:60;pointer-events:none;opacity:0;
@@ -209,11 +245,21 @@ tr[data-src]:hover,tr[data-src].hl{background:var(--accent-soft)}
 <header class="top">
   <div class="wrap">
     <div class="eyebrow"><span>Bernard Kizer</span><span id="hdr-window"></span><span id="hdr-gen"></span></div>
-    <h1>Señal y silencio</h1>
+    <h1>SMG AI Agent Hub</h1>
     <p class="sub">Qué conversaciones se abren, de dónde vienen y cuáles llegan a una agenda.</p>
     <dl class="meta-strip" id="hdr-meta"></dl>
   </div>
 </header>
+
+<section id="resumen">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">En resumen</p>
+      <h2 id="sum-title"></h2>
+    </div>
+    <div id="sum-body"></div>
+  </div>
+</section>
 
 <section id="conversaciones">
   <div class="wrap">
@@ -259,7 +305,7 @@ tr[data-src]:hover,tr[data-src].hl{background:var(--accent-soft)}
     <div class="sec-head">
       <p class="kicker">02 · Fuentes de tráfico</p>
       <h2>De dónde viene cada conversación, y cuál termina en agenda</h2>
-      <p>Cada trigger link redirige a un <span class="mono">wa.me</span> con un texto pre-cargado distinto, así que la fuente queda firmada en el primer mensaje del lead. Lo que no llega por trigger link se clasifica por canal.</p>
+      <p>Los enlaces de campaña abren WhatsApp con un mensaje ya escrito, distinto en cada uno. Cuando la persona lo envía tal cual, ese texto nos dice exactamente por dónde llegó. De quien escribe por su cuenta solo sabemos el canal: por dónde entró, pero no qué la movió a escribir.</p>
     </div>
     <div class="tbl-wrap"><table id="src-tbl"></table></div>
     <div id="src-callout"></div>
@@ -403,7 +449,7 @@ tr[data-src]:hover,tr[data-src].hl{background:var(--accent-soft)}
 </footer>
 
 <script>
-const DATA = {"generatedAt":"2026-09-08T03:01:37Z","window":{"days":14,"from":"2026-08-24","to":"2026-09-07"},"conversations":{"total":6013,"withMessages":6010,"replied":3175,"replyRate":52.8,"continuity":{">=1":6010,">=2":4439,">=4":2324,">=6":1492,">=10":831,">=20":458},"continuityRate":{">=1":100.0,">=2":73.9,">=4":38.7,">=6":24.8,">=10":13.8,">=20":7.6},"byDay":[{"day":"2026-08-24","n":8,"chan":{"EMAIL":5,"INSTAGRAM":3}},{"day":"2026-08-25","n":407,"chan":{"EMAIL":38,"INSTAGRAM":154,"FACEBOOK":7,"NO_SHOW":7,"LIVE_CHAT_INFO_MESSAGE":2,"CAMPAIGN_EMAIL":199}},{"day":"2026-08-26","n":1089,"chan":{"INSTAGRAM":133,"WHATSAPP":634,"EMAIL":50,"FACEBOOK":23,"NO_SHOW":5,"CAMPAIGN_EMAIL":244}},{"day":"2026-08-27","n":271,"chan":{"INSTAGRAM":176,"FACEBOOK":51,"EMAIL":40,"NO_SHOW":3,"WHATSAPP":1}},{"day":"2026-08-28","n":636,"chan":{"INSTAGRAM":542,"FACEBOOK":58,"EMAIL":28,"NO_SHOW":6,"WHATSAPP":2}},{"day":"2026-08-29","n":209,"chan":{"INSTAGRAM":142,"FACEBOOK":41,"EMAIL":18,"NO_SHOW":7,"WHATSAPP":1}},{"day":"2026-08-30","n":277,"chan":{"INSTAGRAM":128,"WHATSAPP":119,"FACEBOOK":17,"EMAIL":9,"NO_SHOW":4}},{"day":"2026-08-31","n":489,"chan":{"INSTAGRAM":422,"WHATSAPP":23,"EMAIL":18,"FACEBOOK":18,"NO_SHOW":8}},{"day":"2026-09-01","n":661,"chan":{"INSTAGRAM":570,"WHATSAPP":59,"EMAIL":13,"NO_SHOW":8,"FACEBOOK":11}},{"day":"2026-09-02","n":361,"chan":{"INSTAGRAM":293,"WHATSAPP":21,"EMAIL":19,"FACEBOOK":15,"NO_SHOW":12,"CALL":1}},{"day":"2026-09-03","n":226,"chan":{"INSTAGRAM":190,"FACEBOOK":15,"WHATSAPP":5,"CALL":1,"EMAIL":9,"NO_SHOW":6}},{"day":"2026-09-04","n":390,"chan":{"FACEBOOK":20,"INSTAGRAM":346,"WHATSAPP":6,"EMAIL":9,"NO_SHOW":7,"TIKTOK":2}},{"day":"2026-09-05","n":182,"chan":{"INSTAGRAM":139,"FACEBOOK":23,"WHATSAPP":6,"EMAIL":10,"NO_SHOW":4}},{"day":"2026-09-06","n":416,"chan":{"FACEBOOK":26,"INSTAGRAM":348,"WHATSAPP":36,"EMAIL":4,"NO_SHOW":1,"TIKTOK":1}},{"day":"2026-09-07","n":391,"chan":{"INSTAGRAM":338,"WHATSAPP":27,"EMAIL":12,"NO_SHOW":7,"TIKTOK":1,"FACEBOOK":6}}],"byChannel":[{"channel":"INSTAGRAM","n":3924},{"channel":"WHATSAPP","n":940},{"channel":"CAMPAIGN_EMAIL","n":443},{"channel":"FACEBOOK","n":331},{"channel":"EMAIL","n":282},{"channel":"NO_SHOW","n":85},{"channel":"TIKTOK","n":4},{"channel":"CALL","n":2},{"channel":"LIVE_CHAT_INFO_MESSAGE","n":2}],"avgMsgs":5.81},"sources":[{"key":"ig_organico","label":"IG Orgánico / DM directo","group":"Instagram","signed":false,"convs":3923,"cont4":1916,"replied":2679,"contacts":3923,"qualified":0,"booked":0,"apptAfter":6,"apptBot":0,"apptAfterRate":0.2,"replyRate":68.3,"cont4Rate":48.8,"bookRate":0.0,"avgMsgs":6.5},{"key":"campana_wa","label":"Campaña saliente WhatsApp","group":"Campañas","signed":false,"convs":748,"cont4":80,"replied":86,"contacts":748,"qualified":25,"booked":8,"apptAfter":10,"apptBot":8,"apptAfterRate":1.3,"replyRate":11.5,"cont4Rate":10.7,"bookRate":1.1,"avgMsgs":2.9},{"key":"sin_firma","label":"Sin atribuir","group":"Sin atribuir","signed":false,"convs":534,"cont4":9,"replied":7,"contacts":534,"qualified":1,"booked":0,"apptAfter":2,"apptBot":0,"apptAfterRate":0.4,"replyRate":1.3,"cont4Rate":1.7,"bookRate":0.0,"avgMsgs":1.7},{"key":"fb_organico","label":"Facebook · DM directo","group":"Otros","signed":false,"convs":331,"cont4":97,"replied":182,"contacts":331,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":55.0,"cont4Rate":29.3,"bookRate":0.0,"avgMsgs":5.3},{"key":"email_inbound","label":"Email entrante","group":"Otros","signed":false,"convs":260,"cont4":12,"replied":7,"contacts":260,"qualified":0,"booked":0,"apptAfter":3,"apptBot":0,"apptAfterRate":1.2,"replyRate":2.7,"cont4Rate":4.6,"bookRate":0.0,"avgMsgs":1.6},{"key":"ig_kw_migrana","label":"IG Keyword · MIGRAÑA","group":"Instagram","signed":true,"convs":137,"cont4":135,"replied":137,"contacts":137,"qualified":8,"booked":2,"apptAfter":6,"apptBot":2,"apptAfterRate":4.4,"replyRate":100.0,"cont4Rate":98.5,"bookRate":1.5,"avgMsgs":20.4},{"key":"lnk_ig_keyword_trigger_higado_260904","label":"IG Keyword Trigger HIGADO 260904","group":"Instagram","signed":true,"convs":59,"cont4":57,"replied":59,"contacts":59,"qualified":6,"booked":4,"apptAfter":5,"apptBot":4,"apptAfterRate":8.5,"replyRate":100.0,"cont4Rate":96.6,"bookRate":6.8,"avgMsgs":16.7},{"key":"wa_inbound","label":"WA Inbound sin firma","group":"WhatsApp","signed":false,"convs":6,"cont4":6,"replied":6,"contacts":6,"qualified":2,"booked":2,"apptAfter":3,"apptBot":2,"apptAfterRate":50.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":33.3,"avgMsgs":26.2},{"key":"ig_kw_cambio","label":"IG Keyword · CAMBIO","group":"Instagram","signed":true,"convs":6,"cont4":6,"replied":6,"contacts":6,"qualified":1,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":19.3},{"key":"wa_communities","label":"WA Communities","group":"WhatsApp","signed":true,"convs":3,"cont4":3,"replied":3,"contacts":3,"qualified":1,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":15.0},{"key":"lnk_ig_keyword_trigger_quiero_260904","label":"IG Keyword Trigger QUIERO 260904","group":"Instagram","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":6.0},{"key":"ig_kw_clase","label":"IG Keyword · CLASE","group":"Instagram","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":4.0},{"key":"tt_bio","label":"TikTok · Bio","group":"TikTok","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":14.0}],"numbers":[{"label":"Bot","convs":305,"replied":305,"booked":16,"replyRate":100.0}],"funnel":{"context_ready":329,"profile_ready":222,"qualified_lead":97,"appointment_sent":152,"appointment_booked":38,"ai_attended":65},"countries":[{"iso":"US","country":"Estados Unidos","flag":"🇺🇸","convs":224,"replied":36,"cont4":34,"contacts":224,"qualified":2,"booked":2,"replyRate":16.1,"cont4Rate":15.2,"sent":624,"failed":6,"failRate":1.0,"avgMsgs":4.1},{"iso":"MX","country":"México","flag":"🇲🇽","convs":221,"replied":34,"cont4":33,"contacts":221,"qualified":6,"booked":4,"replyRate":15.4,"cont4Rate":14.9,"sent":531,"failed":40,"failRate":7.5,"avgMsgs":3.4},{"iso":"VE","country":"Venezuela","flag":"🇻🇪","convs":147,"replied":83,"cont4":86,"contacts":147,"qualified":5,"booked":2,"replyRate":56.5,"cont4Rate":58.5,"sent":1090,"failed":4,"failRate":0.4,"avgMsgs":12.4},{"iso":"CO","country":"Colombia","flag":"🇨🇴","convs":135,"replied":33,"cont4":33,"contacts":135,"qualified":4,"booked":2,"replyRate":24.4,"cont4Rate":24.4,"sent":428,"failed":22,"failRate":5.1,"avgMsgs":4.8},{"iso":"CL","country":"Chile","flag":"🇨🇱","convs":129,"replied":29,"cont4":27,"contacts":129,"qualified":4,"booked":1,"replyRate":22.5,"cont4Rate":20.9,"sent":387,"failed":14,"failRate":3.6,"avgMsgs":4.6},{"iso":"AR","country":"Argentina","flag":"🇦🇷","convs":101,"replied":27,"cont4":26,"contacts":101,"qualified":4,"booked":3,"replyRate":26.7,"cont4Rate":25.7,"sent":367,"failed":5,"failRate":1.4,"avgMsgs":6.0},{"iso":"PE","country":"Perú","flag":"🇵🇪","convs":96,"replied":18,"cont4":16,"contacts":96,"qualified":5,"booked":1,"replyRate":18.8,"cont4Rate":16.7,"sent":321,"failed":14,"failRate":4.4,"avgMsgs":5.1},{"iso":"DO","country":"República Dominicana","flag":"🇩🇴","convs":51,"replied":15,"cont4":16,"contacts":51,"qualified":1,"booked":0,"replyRate":29.4,"cont4Rate":31.4,"sent":227,"failed":1,"failRate":0.4,"avgMsgs":7.0},{"iso":"PA","country":"Panamá","flag":"🇵🇦","convs":37,"replied":9,"cont4":9,"contacts":37,"qualified":1,"booked":0,"replyRate":24.3,"cont4Rate":24.3,"sent":132,"failed":1,"failRate":0.8,"avgMsgs":5.4},{"iso":"EC","country":"Ecuador","flag":"🇪🇨","convs":30,"replied":8,"cont4":8,"contacts":30,"qualified":1,"booked":0,"replyRate":26.7,"cont4Rate":26.7,"sent":115,"failed":4,"failRate":3.5,"avgMsgs":5.6},{"iso":"ES","country":"España","flag":"🇪🇸","convs":27,"replied":11,"cont4":11,"contacts":27,"qualified":4,"booked":0,"replyRate":40.7,"cont4Rate":40.7,"sent":172,"failed":1,"failRate":0.6,"avgMsgs":11.3},{"iso":"PR","country":"Puerto Rico","flag":"🇵🇷","convs":24,"replied":3,"cont4":3,"contacts":24,"qualified":0,"booked":0,"replyRate":12.5,"cont4Rate":12.5,"sent":56,"failed":0,"failRate":0.0,"avgMsgs":3.2},{"iso":"BO","country":"Bolivia","flag":"🇧🇴","convs":17,"replied":2,"cont4":2,"contacts":17,"qualified":1,"booked":0,"replyRate":11.8,"cont4Rate":11.8,"sent":40,"failed":0,"failRate":0.0,"avgMsgs":3.2},{"iso":"CA","country":"Canadá","flag":"🇨🇦","convs":15,"replied":2,"cont4":2,"contacts":15,"qualified":1,"booked":1,"replyRate":13.3,"cont4Rate":13.3,"sent":84,"failed":1,"failRate":1.2,"avgMsgs":7.3},{"iso":"BR","country":"Brasil","flag":"🇧🇷","convs":12,"replied":3,"cont4":3,"contacts":12,"qualified":0,"booked":0,"replyRate":25.0,"cont4Rate":25.0,"sent":30,"failed":3,"failRate":10.0,"avgMsgs":3.5},{"iso":"IT","country":"Italia","flag":"🇮🇹","convs":10,"replied":2,"cont4":1,"contacts":10,"qualified":0,"booked":0,"replyRate":20.0,"cont4Rate":10.0,"sent":13,"failed":0,"failRate":0.0,"avgMsgs":2.0},{"iso":"NI","country":"Nicaragua","flag":"🇳🇮","convs":10,"replied":1,"cont4":1,"contacts":10,"qualified":0,"booked":0,"replyRate":10.0,"cont4Rate":10.0,"sent":23,"failed":1,"failRate":4.3,"avgMsgs":3.7},{"iso":"SV","country":"El Salvador","flag":"🇸🇻","convs":7,"replied":2,"cont4":2,"contacts":7,"qualified":1,"booked":0,"replyRate":28.6,"cont4Rate":28.6,"sent":32,"failed":0,"failRate":0.0,"avgMsgs":6.7},{"iso":"GT","country":"Guatemala","flag":"🇬🇹","convs":7,"replied":0,"cont4":0,"contacts":7,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":7,"failed":0,"failRate":0.0,"avgMsgs":1.3},{"iso":"PY","country":"Paraguay","flag":"🇵🇾","convs":7,"replied":1,"cont4":1,"contacts":7,"qualified":0,"booked":0,"replyRate":14.3,"cont4Rate":14.3,"sent":12,"failed":0,"failRate":0.0,"avgMsgs":1.9},{"iso":"HN","country":"Honduras","flag":"🇭🇳","convs":5,"replied":2,"cont4":1,"contacts":5,"qualified":0,"booked":0,"replyRate":40.0,"cont4Rate":20.0,"sent":8,"failed":0,"failRate":0.0,"avgMsgs":2.2},{"iso":"PT","country":"Portugal","flag":"🇵🇹","convs":4,"replied":2,"cont4":2,"contacts":4,"qualified":0,"booked":0,"replyRate":50.0,"cont4Rate":50.0,"sent":28,"failed":1,"failRate":3.6,"avgMsgs":10.2},{"iso":"CR","country":"Costa Rica","flag":"🇨🇷","convs":4,"replied":1,"cont4":1,"contacts":4,"qualified":0,"booked":0,"replyRate":25.0,"cont4Rate":25.0,"sent":10,"failed":0,"failRate":0.0,"avgMsgs":3.8},{"iso":"NL","country":"Países Bajos","flag":"🇳🇱","convs":3,"replied":0,"cont4":0,"contacts":3,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":4,"failed":0,"failRate":0.0,"avgMsgs":1.3},{"iso":"UY","country":"Uruguay","flag":"🇺🇾","convs":3,"replied":3,"cont4":3,"contacts":3,"qualified":0,"booked":0,"replyRate":100.0,"cont4Rate":100.0,"sent":63,"failed":0,"failRate":0.0,"avgMsgs":33.3},{"iso":"AU","country":"Australia","flag":"🇦🇺","convs":3,"replied":1,"cont4":1,"contacts":3,"qualified":0,"booked":0,"replyRate":33.3,"cont4Rate":33.3,"sent":5,"failed":0,"failRate":0.0,"avgMsgs":2.0},{"iso":"SE","country":"Suecia","flag":"🇸🇪","convs":2,"replied":1,"cont4":1,"contacts":2,"qualified":1,"booked":0,"replyRate":50.0,"cont4Rate":50.0,"sent":14,"failed":0,"failRate":0.0,"avgMsgs":9.5},{"iso":"TT","country":"Trinidad y Tobago","flag":"🇹🇹","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"CU","country":"Cuba","flag":"🇨🇺","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"GB","country":"Reino Unido","flag":"🇬🇧","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"PK","country":"Pakistán","flag":"🇵🇰","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":1,"failRate":100.0,"avgMsgs":1.0}],"countryCoverage":{"withPhone":1335,"total":6010,"pct":22.2},"funnelWindow":{"context_ready":213,"profile_ready":150,"qualified_lead":44,"appointment_sent":103,"appointment_booked":16,"ai_attended":44},"funnelOverlap":{"chain":["context_ready","profile_ready","appointment_sent"],"chainBreaks":{"profile_ready":0,"appointment_sent":0},"sentWithoutQualified":89,"qualifiedWithoutSent":34,"bookedWithoutSent":38,"attendedWithoutBooked":31},"funnelBySource":{"ig_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"lnk_ig_keyword_trigger_higado_260904":{"context_ready":34,"profile_ready":25,"qualified_lead":6,"appointment_sent":6,"appointment_booked":4,"ai_attended":6},"fb_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"email_inbound":{"context_ready":6,"profile_ready":6,"qualified_lead":0,"appointment_sent":5,"appointment_booked":0,"ai_attended":0},"sin_firma":{"context_ready":2,"profile_ready":1,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1},"ig_kw_migrana":{"context_ready":108,"profile_ready":76,"qualified_lead":8,"appointment_sent":60,"appointment_booked":2,"ai_attended":8},"wa_inbound":{"context_ready":2,"profile_ready":1,"qualified_lead":2,"appointment_sent":0,"appointment_booked":2,"ai_attended":2},"campana_wa":{"context_ready":56,"profile_ready":36,"qualified_lead":25,"appointment_sent":26,"appointment_booked":8,"ai_attended":25},"lnk_ig_keyword_trigger_quiero_260904":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_clase":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"tt_bio":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_cambio":{"context_ready":4,"profile_ready":4,"qualified_lead":1,"appointment_sent":4,"appointment_booked":0,"ai_attended":1},"wa_communities":{"context_ready":1,"profile_ready":1,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1}},"contactsInWindow":6010,"links":{"total":18,"derived":3},"campaigns":[{"tag":"campana-rescue-26-ago-int","contacts":612},{"tag":"campana-13-ago","contacts":378},{"tag":"campana-19-ago-int","contacts":1449},{"tag":"campana-19-ago-eeuu","contacts":889},{"tag":"lead capture","contacts":65}],"closers":{"Lucas Rajoy":{"total":79,"byStatus":{"confirmed":67,"cancelled":11,"invalid":1}},"Magaly Nievas":{"total":96,"byStatus":{"confirmed":70,"cancelled":26}}},"appointments":{"total":175,"byOrigin":{"booking_widget":139,"conversations_ai":29,"calendar_page":6,"contactdetails_page":1},"afterConversation":36,"withConversation":124,"contactsWithAppt":123,"taggedBooked":16},"latency":{"firstReply":{"med":3149000.0,"p90":349175000.0,"n":291,"dist":[{"label":"< 1 min","n":28},{"label":"1-5 min","n":43},{"label":"5-30 min","n":51},{"label":"30 min - 2 h","n":54},{"label":"2-12 h","n":36},{"label":"12-24 h","n":18},{"label":"> 24 h","n":61}]},"bot":{"med":50000.0,"p90":1762000.0,"n":7450,"dist":[{"label":"< 1 min","n":3977},{"label":"1-5 min","n":2052},{"label":"5-30 min","n":683},{"label":"30 min - 2 h","n":299},{"label":"2-12 h","n":338},{"label":"12-24 h","n":92},{"label":"> 24 h","n":9}]}},"hours":[{"h":0,"sent":372,"replied":206},{"h":1,"sent":300,"replied":212},{"h":2,"sent":288,"replied":211},{"h":3,"sent":176,"replied":149},{"h":4,"sent":105,"replied":91},{"h":5,"sent":62,"replied":53},{"h":6,"sent":39,"replied":31},{"h":7,"sent":29,"replied":28},{"h":8,"sent":39,"replied":32},{"h":9,"sent":48,"replied":45},{"h":10,"sent":101,"replied":90},{"h":11,"sent":155,"replied":141},{"h":12,"sent":156,"replied":138},{"h":13,"sent":390,"replied":206},{"h":14,"sent":440,"replied":186},{"h":15,"sent":464,"replied":183},{"h":16,"sent":255,"replied":136},{"h":17,"sent":155,"replied":114},{"h":18,"sent":104,"replied":91},{"h":19,"sent":395,"replied":138},{"h":20,"sent":336,"replied":117},{"h":21,"sent":328,"replied":118},{"h":22,"sent":281,"replied":127},{"h":23,"sent":389,"replied":171}],"dow":[{"d":"Lunes","sent":877,"replied":631},{"d":"Martes","sent":841,"replied":669},{"d":"Miércoles","sent":1391,"replied":515},{"d":"Jueves","sent":465,"replied":181},{"d":"Viernes","sent":861,"replied":595},{"d":"Sábado","sent":522,"replied":222},{"d":"Domingo","sent":450,"replied":201}],"touches":[{"n":1,"convs":687},{"n":2,"convs":122},{"n":3,"convs":581},{"n":4,"convs":241},{"n":5,"convs":307},{"n":6,"convs":1076}],"depth":[{"n":1,"convs":6010},{"n":2,"convs":4439},{"n":3,"convs":2722},{"n":4,"convs":2324},{"n":5,"convs":1693},{"n":6,"convs":1492},{"n":7,"convs":1234},{"n":8,"convs":1030},{"n":9,"convs":923},{"n":10,"convs":831},{"n":11,"convs":771},{"n":12,"convs":728},{"n":13,"convs":688},{"n":14,"convs":640},{"n":15,"convs":610},{"n":16,"convs":572},{"n":17,"convs":542},{"n":18,"convs":511},{"n":19,"convs":480},{"n":20,"convs":458}],"failedMessages":211};
+const DATA = {"generatedAt":"2026-09-08T03:01:37Z","window":{"days":14,"from":"2026-08-24","to":"2026-09-07"},"conversations":{"total":6013,"withMessages":6010,"replied":3175,"replyRate":52.8,"continuity":{">=1":6010,">=2":4439,">=4":2324,">=6":1492,">=10":831,">=20":458},"continuityRate":{">=1":100.0,">=2":73.9,">=4":38.7,">=6":24.8,">=10":13.8,">=20":7.6},"byDay":[{"day":"2026-08-24","n":8,"chan":{"EMAIL":5,"INSTAGRAM":3}},{"day":"2026-08-25","n":407,"chan":{"EMAIL":38,"INSTAGRAM":154,"FACEBOOK":7,"NO_SHOW":7,"LIVE_CHAT_INFO_MESSAGE":2,"CAMPAIGN_EMAIL":199}},{"day":"2026-08-26","n":1089,"chan":{"INSTAGRAM":133,"WHATSAPP":634,"EMAIL":50,"FACEBOOK":23,"NO_SHOW":5,"CAMPAIGN_EMAIL":244}},{"day":"2026-08-27","n":271,"chan":{"INSTAGRAM":176,"FACEBOOK":51,"EMAIL":40,"NO_SHOW":3,"WHATSAPP":1}},{"day":"2026-08-28","n":636,"chan":{"INSTAGRAM":542,"FACEBOOK":58,"EMAIL":28,"NO_SHOW":6,"WHATSAPP":2}},{"day":"2026-08-29","n":209,"chan":{"INSTAGRAM":142,"FACEBOOK":41,"EMAIL":18,"NO_SHOW":7,"WHATSAPP":1}},{"day":"2026-08-30","n":277,"chan":{"INSTAGRAM":128,"WHATSAPP":119,"FACEBOOK":17,"EMAIL":9,"NO_SHOW":4}},{"day":"2026-08-31","n":489,"chan":{"INSTAGRAM":422,"WHATSAPP":23,"EMAIL":18,"FACEBOOK":18,"NO_SHOW":8}},{"day":"2026-09-01","n":661,"chan":{"INSTAGRAM":570,"WHATSAPP":59,"EMAIL":13,"NO_SHOW":8,"FACEBOOK":11}},{"day":"2026-09-02","n":361,"chan":{"INSTAGRAM":293,"WHATSAPP":21,"EMAIL":19,"FACEBOOK":15,"NO_SHOW":12,"CALL":1}},{"day":"2026-09-03","n":226,"chan":{"INSTAGRAM":190,"FACEBOOK":15,"WHATSAPP":5,"CALL":1,"EMAIL":9,"NO_SHOW":6}},{"day":"2026-09-04","n":390,"chan":{"FACEBOOK":20,"INSTAGRAM":346,"WHATSAPP":6,"EMAIL":9,"NO_SHOW":7,"TIKTOK":2}},{"day":"2026-09-05","n":182,"chan":{"INSTAGRAM":139,"FACEBOOK":23,"WHATSAPP":6,"EMAIL":10,"NO_SHOW":4}},{"day":"2026-09-06","n":416,"chan":{"FACEBOOK":26,"INSTAGRAM":348,"WHATSAPP":36,"EMAIL":4,"NO_SHOW":1,"TIKTOK":1}},{"day":"2026-09-07","n":391,"chan":{"INSTAGRAM":338,"WHATSAPP":27,"EMAIL":12,"NO_SHOW":7,"TIKTOK":1,"FACEBOOK":6}}],"byChannel":[{"channel":"INSTAGRAM","n":3924},{"channel":"WHATSAPP","n":940},{"channel":"CAMPAIGN_EMAIL","n":443},{"channel":"FACEBOOK","n":331},{"channel":"EMAIL","n":282},{"channel":"NO_SHOW","n":85},{"channel":"TIKTOK","n":4},{"channel":"CALL","n":2},{"channel":"LIVE_CHAT_INFO_MESSAGE","n":2}],"avgMsgs":5.81},"sources":[{"key":"ig_organico","label":"IG Orgánico / DM directo","group":"Instagram","signed":false,"convs":3923,"cont4":1916,"replied":2679,"contacts":3923,"qualified":0,"booked":0,"apptAfter":6,"apptBot":0,"apptAfterRate":0.2,"replyRate":68.3,"cont4Rate":48.8,"bookRate":0.0,"avgMsgs":6.5},{"key":"campana_wa","label":"Campaña saliente WhatsApp","group":"Campañas","signed":false,"convs":748,"cont4":80,"replied":86,"contacts":748,"qualified":25,"booked":8,"apptAfter":10,"apptBot":8,"apptAfterRate":1.3,"replyRate":11.5,"cont4Rate":10.7,"bookRate":1.1,"avgMsgs":2.9},{"key":"sin_firma","label":"Origen desconocido","group":"Origen desconocido","signed":false,"convs":534,"cont4":9,"replied":7,"contacts":534,"qualified":1,"booked":0,"apptAfter":2,"apptBot":0,"apptAfterRate":0.4,"replyRate":1.3,"cont4Rate":1.7,"bookRate":0.0,"avgMsgs":1.7},{"key":"fb_organico","label":"Facebook · DM directo","group":"Otros","signed":false,"convs":331,"cont4":97,"replied":182,"contacts":331,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":55.0,"cont4Rate":29.3,"bookRate":0.0,"avgMsgs":5.3},{"key":"email_inbound","label":"Email entrante","group":"Otros","signed":false,"convs":260,"cont4":12,"replied":7,"contacts":260,"qualified":0,"booked":0,"apptAfter":3,"apptBot":0,"apptAfterRate":1.2,"replyRate":2.7,"cont4Rate":4.6,"bookRate":0.0,"avgMsgs":1.6},{"key":"ig_kw_migrana","label":"IG Keyword · MIGRAÑA","group":"Instagram","signed":true,"convs":137,"cont4":135,"replied":137,"contacts":137,"qualified":8,"booked":2,"apptAfter":6,"apptBot":2,"apptAfterRate":4.4,"replyRate":100.0,"cont4Rate":98.5,"bookRate":1.5,"avgMsgs":20.4},{"key":"lnk_ig_keyword_trigger_higado_260904","label":"IG Keyword Trigger HIGADO 260904","group":"Instagram","signed":true,"convs":59,"cont4":57,"replied":59,"contacts":59,"qualified":6,"booked":4,"apptAfter":5,"apptBot":4,"apptAfterRate":8.5,"replyRate":100.0,"cont4Rate":96.6,"bookRate":6.8,"avgMsgs":16.7},{"key":"wa_inbound","label":"WhatsApp directo","group":"WhatsApp","signed":false,"convs":6,"cont4":6,"replied":6,"contacts":6,"qualified":2,"booked":2,"apptAfter":3,"apptBot":2,"apptAfterRate":50.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":33.3,"avgMsgs":26.2},{"key":"ig_kw_cambio","label":"IG Keyword · CAMBIO","group":"Instagram","signed":true,"convs":6,"cont4":6,"replied":6,"contacts":6,"qualified":1,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":19.3},{"key":"wa_communities","label":"WA Communities","group":"WhatsApp","signed":true,"convs":3,"cont4":3,"replied":3,"contacts":3,"qualified":1,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":15.0},{"key":"lnk_ig_keyword_trigger_quiero_260904","label":"IG Keyword Trigger QUIERO 260904","group":"Instagram","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":6.0},{"key":"ig_kw_clase","label":"IG Keyword · CLASE","group":"Instagram","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":4.0},{"key":"tt_bio","label":"TikTok · Bio","group":"TikTok","signed":true,"convs":1,"cont4":1,"replied":1,"contacts":1,"qualified":0,"booked":0,"apptAfter":0,"apptBot":0,"apptAfterRate":0.0,"replyRate":100.0,"cont4Rate":100.0,"bookRate":0.0,"avgMsgs":14.0}],"numbers":[{"label":"Bot","convs":305,"replied":305,"booked":16,"replyRate":100.0}],"funnel":{"context_ready":329,"profile_ready":222,"qualified_lead":97,"appointment_sent":152,"appointment_booked":38,"ai_attended":65},"countries":[{"iso":"US","country":"Estados Unidos","flag":"🇺🇸","convs":224,"replied":36,"cont4":34,"contacts":224,"qualified":2,"booked":2,"replyRate":16.1,"cont4Rate":15.2,"sent":624,"failed":6,"failRate":1.0,"avgMsgs":4.1},{"iso":"MX","country":"México","flag":"🇲🇽","convs":221,"replied":34,"cont4":33,"contacts":221,"qualified":6,"booked":4,"replyRate":15.4,"cont4Rate":14.9,"sent":531,"failed":40,"failRate":7.5,"avgMsgs":3.4},{"iso":"VE","country":"Venezuela","flag":"🇻🇪","convs":147,"replied":83,"cont4":86,"contacts":147,"qualified":5,"booked":2,"replyRate":56.5,"cont4Rate":58.5,"sent":1090,"failed":4,"failRate":0.4,"avgMsgs":12.4},{"iso":"CO","country":"Colombia","flag":"🇨🇴","convs":135,"replied":33,"cont4":33,"contacts":135,"qualified":4,"booked":2,"replyRate":24.4,"cont4Rate":24.4,"sent":428,"failed":22,"failRate":5.1,"avgMsgs":4.8},{"iso":"CL","country":"Chile","flag":"🇨🇱","convs":129,"replied":29,"cont4":27,"contacts":129,"qualified":4,"booked":1,"replyRate":22.5,"cont4Rate":20.9,"sent":387,"failed":14,"failRate":3.6,"avgMsgs":4.6},{"iso":"AR","country":"Argentina","flag":"🇦🇷","convs":101,"replied":27,"cont4":26,"contacts":101,"qualified":4,"booked":3,"replyRate":26.7,"cont4Rate":25.7,"sent":367,"failed":5,"failRate":1.4,"avgMsgs":6.0},{"iso":"PE","country":"Perú","flag":"🇵🇪","convs":96,"replied":18,"cont4":16,"contacts":96,"qualified":5,"booked":1,"replyRate":18.8,"cont4Rate":16.7,"sent":321,"failed":14,"failRate":4.4,"avgMsgs":5.1},{"iso":"DO","country":"República Dominicana","flag":"🇩🇴","convs":51,"replied":15,"cont4":16,"contacts":51,"qualified":1,"booked":0,"replyRate":29.4,"cont4Rate":31.4,"sent":227,"failed":1,"failRate":0.4,"avgMsgs":7.0},{"iso":"PA","country":"Panamá","flag":"🇵🇦","convs":37,"replied":9,"cont4":9,"contacts":37,"qualified":1,"booked":0,"replyRate":24.3,"cont4Rate":24.3,"sent":132,"failed":1,"failRate":0.8,"avgMsgs":5.4},{"iso":"EC","country":"Ecuador","flag":"🇪🇨","convs":30,"replied":8,"cont4":8,"contacts":30,"qualified":1,"booked":0,"replyRate":26.7,"cont4Rate":26.7,"sent":115,"failed":4,"failRate":3.5,"avgMsgs":5.6},{"iso":"ES","country":"España","flag":"🇪🇸","convs":27,"replied":11,"cont4":11,"contacts":27,"qualified":4,"booked":0,"replyRate":40.7,"cont4Rate":40.7,"sent":172,"failed":1,"failRate":0.6,"avgMsgs":11.3},{"iso":"PR","country":"Puerto Rico","flag":"🇵🇷","convs":24,"replied":3,"cont4":3,"contacts":24,"qualified":0,"booked":0,"replyRate":12.5,"cont4Rate":12.5,"sent":56,"failed":0,"failRate":0.0,"avgMsgs":3.2},{"iso":"BO","country":"Bolivia","flag":"🇧🇴","convs":17,"replied":2,"cont4":2,"contacts":17,"qualified":1,"booked":0,"replyRate":11.8,"cont4Rate":11.8,"sent":40,"failed":0,"failRate":0.0,"avgMsgs":3.2},{"iso":"CA","country":"Canadá","flag":"🇨🇦","convs":15,"replied":2,"cont4":2,"contacts":15,"qualified":1,"booked":1,"replyRate":13.3,"cont4Rate":13.3,"sent":84,"failed":1,"failRate":1.2,"avgMsgs":7.3},{"iso":"BR","country":"Brasil","flag":"🇧🇷","convs":12,"replied":3,"cont4":3,"contacts":12,"qualified":0,"booked":0,"replyRate":25.0,"cont4Rate":25.0,"sent":30,"failed":3,"failRate":10.0,"avgMsgs":3.5},{"iso":"IT","country":"Italia","flag":"🇮🇹","convs":10,"replied":2,"cont4":1,"contacts":10,"qualified":0,"booked":0,"replyRate":20.0,"cont4Rate":10.0,"sent":13,"failed":0,"failRate":0.0,"avgMsgs":2.0},{"iso":"NI","country":"Nicaragua","flag":"🇳🇮","convs":10,"replied":1,"cont4":1,"contacts":10,"qualified":0,"booked":0,"replyRate":10.0,"cont4Rate":10.0,"sent":23,"failed":1,"failRate":4.3,"avgMsgs":3.7},{"iso":"SV","country":"El Salvador","flag":"🇸🇻","convs":7,"replied":2,"cont4":2,"contacts":7,"qualified":1,"booked":0,"replyRate":28.6,"cont4Rate":28.6,"sent":32,"failed":0,"failRate":0.0,"avgMsgs":6.7},{"iso":"GT","country":"Guatemala","flag":"🇬🇹","convs":7,"replied":0,"cont4":0,"contacts":7,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":7,"failed":0,"failRate":0.0,"avgMsgs":1.3},{"iso":"PY","country":"Paraguay","flag":"🇵🇾","convs":7,"replied":1,"cont4":1,"contacts":7,"qualified":0,"booked":0,"replyRate":14.3,"cont4Rate":14.3,"sent":12,"failed":0,"failRate":0.0,"avgMsgs":1.9},{"iso":"HN","country":"Honduras","flag":"🇭🇳","convs":5,"replied":2,"cont4":1,"contacts":5,"qualified":0,"booked":0,"replyRate":40.0,"cont4Rate":20.0,"sent":8,"failed":0,"failRate":0.0,"avgMsgs":2.2},{"iso":"PT","country":"Portugal","flag":"🇵🇹","convs":4,"replied":2,"cont4":2,"contacts":4,"qualified":0,"booked":0,"replyRate":50.0,"cont4Rate":50.0,"sent":28,"failed":1,"failRate":3.6,"avgMsgs":10.2},{"iso":"CR","country":"Costa Rica","flag":"🇨🇷","convs":4,"replied":1,"cont4":1,"contacts":4,"qualified":0,"booked":0,"replyRate":25.0,"cont4Rate":25.0,"sent":10,"failed":0,"failRate":0.0,"avgMsgs":3.8},{"iso":"NL","country":"Países Bajos","flag":"🇳🇱","convs":3,"replied":0,"cont4":0,"contacts":3,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":4,"failed":0,"failRate":0.0,"avgMsgs":1.3},{"iso":"UY","country":"Uruguay","flag":"🇺🇾","convs":3,"replied":3,"cont4":3,"contacts":3,"qualified":0,"booked":0,"replyRate":100.0,"cont4Rate":100.0,"sent":63,"failed":0,"failRate":0.0,"avgMsgs":33.3},{"iso":"AU","country":"Australia","flag":"🇦🇺","convs":3,"replied":1,"cont4":1,"contacts":3,"qualified":0,"booked":0,"replyRate":33.3,"cont4Rate":33.3,"sent":5,"failed":0,"failRate":0.0,"avgMsgs":2.0},{"iso":"SE","country":"Suecia","flag":"🇸🇪","convs":2,"replied":1,"cont4":1,"contacts":2,"qualified":1,"booked":0,"replyRate":50.0,"cont4Rate":50.0,"sent":14,"failed":0,"failRate":0.0,"avgMsgs":9.5},{"iso":"TT","country":"Trinidad y Tobago","flag":"🇹🇹","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"CU","country":"Cuba","flag":"🇨🇺","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"GB","country":"Reino Unido","flag":"🇬🇧","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":0,"failRate":0.0,"avgMsgs":1.0},{"iso":"PK","country":"Pakistán","flag":"🇵🇰","convs":1,"replied":0,"cont4":0,"contacts":1,"qualified":0,"booked":0,"replyRate":0.0,"cont4Rate":0.0,"sent":1,"failed":1,"failRate":100.0,"avgMsgs":1.0}],"countryCoverage":{"withPhone":1335,"total":6010,"pct":22.2},"funnelWindow":{"context_ready":213,"profile_ready":150,"qualified_lead":44,"appointment_sent":103,"appointment_booked":16,"ai_attended":44},"funnelOverlap":{"chain":["context_ready","profile_ready","appointment_sent"],"chainBreaks":{"profile_ready":0,"appointment_sent":0},"sentWithoutQualified":89,"qualifiedWithoutSent":34,"bookedWithoutSent":38,"attendedWithoutBooked":31},"funnelBySource":{"ig_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"lnk_ig_keyword_trigger_higado_260904":{"context_ready":34,"profile_ready":25,"qualified_lead":6,"appointment_sent":6,"appointment_booked":4,"ai_attended":6},"fb_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"email_inbound":{"context_ready":6,"profile_ready":6,"qualified_lead":0,"appointment_sent":5,"appointment_booked":0,"ai_attended":0},"sin_firma":{"context_ready":2,"profile_ready":1,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1},"ig_kw_migrana":{"context_ready":108,"profile_ready":76,"qualified_lead":8,"appointment_sent":60,"appointment_booked":2,"ai_attended":8},"wa_inbound":{"context_ready":2,"profile_ready":1,"qualified_lead":2,"appointment_sent":0,"appointment_booked":2,"ai_attended":2},"campana_wa":{"context_ready":56,"profile_ready":36,"qualified_lead":25,"appointment_sent":26,"appointment_booked":8,"ai_attended":25},"lnk_ig_keyword_trigger_quiero_260904":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_clase":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"tt_bio":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_cambio":{"context_ready":4,"profile_ready":4,"qualified_lead":1,"appointment_sent":4,"appointment_booked":0,"ai_attended":1},"wa_communities":{"context_ready":1,"profile_ready":1,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1}},"contactsInWindow":6010,"links":{"total":18,"derived":3},"campaigns":[{"tag":"campana-rescue-26-ago-int","contacts":612},{"tag":"campana-13-ago","contacts":378},{"tag":"campana-19-ago-int","contacts":1449},{"tag":"campana-19-ago-eeuu","contacts":889},{"tag":"lead capture","contacts":65}],"closers":{"Lucas Rajoy":{"total":79,"byStatus":{"confirmed":67,"cancelled":11,"invalid":1}},"Magaly Nievas":{"total":96,"byStatus":{"confirmed":70,"cancelled":26}}},"appointments":{"total":175,"byOrigin":{"booking_widget":139,"conversations_ai":29,"calendar_page":6,"contactdetails_page":1},"afterConversation":36,"withConversation":124,"contactsWithAppt":123,"taggedBooked":16},"latency":{"firstReply":{"med":3149000.0,"p90":349175000.0,"n":291,"dist":[{"label":"< 1 min","n":28},{"label":"1-5 min","n":43},{"label":"5-30 min","n":51},{"label":"30 min - 2 h","n":54},{"label":"2-12 h","n":36},{"label":"12-24 h","n":18},{"label":"> 24 h","n":61}]},"bot":{"med":50000.0,"p90":1762000.0,"n":7450,"dist":[{"label":"< 1 min","n":3977},{"label":"1-5 min","n":2052},{"label":"5-30 min","n":683},{"label":"30 min - 2 h","n":299},{"label":"2-12 h","n":338},{"label":"12-24 h","n":92},{"label":"> 24 h","n":9}]}},"hours":[{"h":0,"sent":372,"replied":206},{"h":1,"sent":300,"replied":212},{"h":2,"sent":288,"replied":211},{"h":3,"sent":176,"replied":149},{"h":4,"sent":105,"replied":91},{"h":5,"sent":62,"replied":53},{"h":6,"sent":39,"replied":31},{"h":7,"sent":29,"replied":28},{"h":8,"sent":39,"replied":32},{"h":9,"sent":48,"replied":45},{"h":10,"sent":101,"replied":90},{"h":11,"sent":155,"replied":141},{"h":12,"sent":156,"replied":138},{"h":13,"sent":390,"replied":206},{"h":14,"sent":440,"replied":186},{"h":15,"sent":464,"replied":183},{"h":16,"sent":255,"replied":136},{"h":17,"sent":155,"replied":114},{"h":18,"sent":104,"replied":91},{"h":19,"sent":395,"replied":138},{"h":20,"sent":336,"replied":117},{"h":21,"sent":328,"replied":118},{"h":22,"sent":281,"replied":127},{"h":23,"sent":389,"replied":171}],"dow":[{"d":"Lunes","sent":877,"replied":631},{"d":"Martes","sent":841,"replied":669},{"d":"Miércoles","sent":1391,"replied":515},{"d":"Jueves","sent":465,"replied":181},{"d":"Viernes","sent":861,"replied":595},{"d":"Sábado","sent":522,"replied":222},{"d":"Domingo","sent":450,"replied":201}],"touches":[{"n":1,"convs":687},{"n":2,"convs":122},{"n":3,"convs":581},{"n":4,"convs":241},{"n":5,"convs":307},{"n":6,"convs":1076}],"depth":[{"n":1,"convs":6010},{"n":2,"convs":4439},{"n":3,"convs":2722},{"n":4,"convs":2324},{"n":5,"convs":1693},{"n":6,"convs":1492},{"n":7,"convs":1234},{"n":8,"convs":1030},{"n":9,"convs":923},{"n":10,"convs":831},{"n":11,"convs":771},{"n":12,"convs":728},{"n":13,"convs":688},{"n":14,"convs":640},{"n":15,"convs":610},{"n":16,"convs":572},{"n":17,"convs":542},{"n":18,"convs":511},{"n":19,"convs":480},{"n":20,"convs":458}],"failedMessages":211};
 const CONTACTS = {"generatedAt":"2026-09-04T05:19:40Z","totalContacts":106199,"withPhone":8071,"noPhone":98116,"unknownPrefix":12,"coveragePct":7.6,"countries":[{"iso":"US","country":"Estados Unidos","flag":"🇺🇸","contacts":2489,"qualified":9,"booked":6,"qualifiedRate":0.4,"bookedRate":0.2},{"iso":"VE","country":"Venezuela","flag":"🇻🇪","contacts":1651,"qualified":27,"booked":9,"qualifiedRate":1.6,"bookedRate":0.5},{"iso":"MX","country":"México","flag":"🇲🇽","contacts":846,"qualified":10,"booked":4,"qualifiedRate":1.2,"bookedRate":0.5},{"iso":"CO","country":"Colombia","flag":"🇨🇴","contacts":612,"qualified":7,"booked":4,"qualifiedRate":1.1,"bookedRate":0.7},{"iso":"AR","country":"Argentina","flag":"🇦🇷","contacts":440,"qualified":5,"booked":3,"qualifiedRate":1.1,"bookedRate":0.7},{"iso":"CL","country":"Chile","flag":"🇨🇱","contacts":342,"qualified":3,"booked":3,"qualifiedRate":0.9,"bookedRate":0.9},{"iso":"ES","country":"España","flag":"🇪🇸","contacts":286,"qualified":7,"booked":1,"qualifiedRate":2.4,"bookedRate":0.3},{"iso":"PE","country":"Perú","flag":"🇵🇪","contacts":248,"qualified":5,"booked":1,"qualifiedRate":2.0,"bookedRate":0.4},{"iso":"DO","country":"República Dominicana","flag":"🇩🇴","contacts":233,"qualified":3,"booked":0,"qualifiedRate":1.3,"bookedRate":0.0},{"iso":"EC","country":"Ecuador","flag":"🇪🇨","contacts":158,"qualified":2,"booked":0,"qualifiedRate":1.3,"bookedRate":0.0},{"iso":"PA","country":"Panamá","flag":"🇵🇦","contacts":138,"qualified":1,"booked":0,"qualifiedRate":0.7,"bookedRate":0.0},{"iso":"GT","country":"Guatemala","flag":"🇬🇹","contacts":93,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"PR","country":"Puerto Rico","flag":"🇵🇷","contacts":91,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"CR","country":"Costa Rica","flag":"🇨🇷","contacts":65,"qualified":1,"booked":0,"qualifiedRate":1.5,"bookedRate":0.0},{"iso":"BR","country":"Brasil","flag":"🇧🇷","contacts":45,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"CA","country":"Canadá","flag":"🇨🇦","contacts":45,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"SV","country":"El Salvador","flag":"🇸🇻","contacts":40,"qualified":1,"booked":0,"qualifiedRate":2.5,"bookedRate":0.0},{"iso":"UY","country":"Uruguay","flag":"🇺🇾","contacts":35,"qualified":2,"booked":1,"qualifiedRate":5.7,"bookedRate":2.9},{"iso":"PY","country":"Paraguay","flag":"🇵🇾","contacts":34,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"HN","country":"Honduras","flag":"🇭🇳","contacts":32,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"IT","country":"Italia","flag":"🇮🇹","contacts":30,"qualified":1,"booked":1,"qualifiedRate":3.3,"bookedRate":3.3},{"iso":"BO","country":"Bolivia","flag":"🇧🇴","contacts":30,"qualified":1,"booked":0,"qualifiedRate":3.3,"bookedRate":0.0},{"iso":"NI","country":"Nicaragua","flag":"🇳🇮","contacts":19,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"PT","country":"Portugal","flag":"🇵🇹","contacts":11,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"AU","country":"Australia","flag":"🇦🇺","contacts":8,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"FR","country":"Francia","flag":"🇫🇷","contacts":7,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"GB","country":"Reino Unido","flag":"🇬🇧","contacts":7,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"NL","country":"Países Bajos","flag":"🇳🇱","contacts":6,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"CU","country":"Cuba","flag":"🇨🇺","contacts":4,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"IL","country":"Israel","flag":"🇮🇱","contacts":3,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"SE","country":"Suecia","flag":"🇸🇪","contacts":3,"qualified":1,"booked":0,"qualifiedRate":33.3,"bookedRate":0.0},{"iso":"BE","country":"Bélgica","flag":"🇧🇪","contacts":3,"qualified":0,"booked":1,"qualifiedRate":0.0,"bookedRate":33.3},{"iso":"DE","country":"Alemania","flag":"🇩🇪","contacts":3,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"AE","country":"Emiratos Árabes","flag":"🇦🇪","contacts":3,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"JP","country":"Japón","flag":"🇯🇵","contacts":2,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"CH","country":"Suiza","flag":"🇨🇭","contacts":2,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"DK","country":"Dinamarca","flag":"🇩🇰","contacts":2,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"IN","country":"India","flag":"🇮🇳","contacts":2,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"PK","country":"Pakistán","flag":"🇵🇰","contacts":1,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"ZA","country":"Sudáfrica","flag":"🇿🇦","contacts":1,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0},{"iso":"TT","country":"Trinidad y Tobago","flag":"🇹🇹","contacts":1,"qualified":0,"booked":0,"qualifiedRate":0.0,"bookedRate":0.0}]};
 
 const $ = s => document.querySelector(s);
@@ -483,6 +529,27 @@ function numOf(td) {
   return isNaN(n) ? null : n;
 }
 
+// ---------- podar tablas largas ----------
+// Una tabla de 41 filas donde 19 no llegan al umbral de significancia no informa,
+// entierra. Se muestran las que dicen algo y el resto queda a un clic.
+function prune(table, keep, etiqueta) {
+  const tbody = table.tBodies[0];
+  if (!tbody) return;
+  const filas = [...tbody.rows].filter(r => !r.classList.contains('tot'));
+  if (filas.length <= keep + 2) return;   // por dos filas no merece la pena
+  filas.slice(keep).forEach(r => r.classList.add('beyond'));
+  const n = filas.length - keep;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'more-btn';
+  btn.textContent = `Ver ${n} ${etiqueta} más`;
+  btn.addEventListener('click', () => {
+    const abierto = table.classList.toggle('show-all');
+    btn.textContent = abierto ? 'Ver menos' : `Ver ${n} ${etiqueta} más`;
+  });
+  table.parentElement.insertAdjacentElement('afterend', btn);
+}
+
 function sortable(table, opt = {}) {
   const thead = table.tHead, tbody = table.tBodies[0];
   if (!thead || !tbody) return;
@@ -559,8 +626,82 @@ function bars(el, items, opt = {}) {
   if (opt.empty && !items.length) el.innerHTML = `<p class="note">${opt.empty}</p>`;
 }
 
+// ---------- resumen con veredicto ----------
+// Se deriva de los datos con umbrales explícitos, no se escribe a mano: si las
+// cifras mejoran, el texto cambia solo. Cada tarjeta dice el número, si está
+// bien o mal, y por qué importa — sin jerga de GHL.
+function renderResumen(d) {
+  const C = d.conversations, AP = d.appointments || {}, OV = d.funnelOverlap || {};
+  const prof = C.continuityRate['>=4'] ?? 0;
+  const firmadas = d.sources.filter(isSigned).reduce((a, s) => a + s.convs, 0);
+  const cobertura = firmadas / Math.max(1, C.withMessages) * 100;
+  const bot = AP.byOrigin ? (AP.byOrigin.conversations_ai || 0) : 0;
+  const botPct = bot / Math.max(1, AP.total || 1) * 100;
+
+  // Umbral -> clase. Son juicios, y por eso van escritos aquí y no escondidos.
+  const nivel = (v, bien, regular) => v >= bien ? 'good' : (v >= regular ? 'warn' : 'crit');
+
+  const cards = [
+    {
+      h: 'Contestan', n: pc(C.replyRate), cls: nivel(C.replyRate, 40, 25),
+      p: `<strong>${fmt(C.replied)}</strong> de ${fmt(C.total)} conversaciones recibieron
+          al menos una respuesta del lead.`
+    },
+    {
+      h: 'Pasan del saludo', n: pc(prof), cls: nivel(prof, 40, 25),
+      p: `Solo <strong>${fmt(C.continuity['>=4'])}</strong> llegan a cuatro mensajes.
+          El resto se queda en el saludo.`
+    },
+    {
+      h: 'Sabemos de dónde vienen', n: pc(cobertura), cls: nivel(cobertura, 40, 15),
+      p: `De las demás sabemos el canal, pero no qué las motivó. Sin eso no se puede
+          saber qué campaña funciona.`
+    },
+    {
+      h: 'Citas que cierra el bot', n: pc(botPct), cls: nivel(botPct, 40, 15),
+      p: `<strong>${fmt(bot)}</strong> de ${fmt(AP.total || 0)} citas. Las demás las
+          reserva la persona por su cuenta.`
+    },
+  ];
+
+  $('#sum-title').textContent = prof < 40
+    ? 'Entra mucha gente, pero pocas conversaciones arrancan de verdad'
+    : 'El embudo conversacional se sostiene';
+
+  // Las acciones salen de los mismos umbrales: solo aparece la que aplica.
+  const acciones = [];
+  if (cobertura < 40) acciones.push(
+    `<strong>Marcar el origen de cada lead.</strong> Hoy solo ${pc(cobertura)} de las
+     conversaciones dicen de dónde vienen, porque solo se identifican las que llegan por
+     un enlace con texto pre-cargado. Mientras siga así, no se puede saber qué campaña
+     merece más presupuesto.`);
+  if (OV.sentWithoutQualified) acciones.push(
+    `<strong>Decidir si el bot debe ofrecer cita sin calificar.</strong>
+     ${fmt(OV.sentWithoutQualified)} de ${fmt(d.funnel.appointment_sent)} envíos del enlace
+     de agenda salen sin haber calificado a la persona, y ${fmt(OV.qualifiedWithoutSent)}
+     personas calificadas nunca lo reciben.`);
+  if (botPct < 40 && AP.total) acciones.push(
+    `<strong>Revisar por qué el bot cierra tan pocas citas.</strong> De ${fmt(AP.total)}
+     citas, ${fmt(bot)} las cerró él; el resto entra por el enlace de reservas sin pasar
+     por la conversación.`);
+  if (prof < 40) acciones.push(
+    `<strong>Trabajar el primer intercambio.</strong> Es donde se pierde la mayoría:
+     ${pc(100 - prof)} de las conversaciones no llegan al cuarto mensaje.`);
+
+  $('#sum-body').innerHTML =
+    `<div class="verdicts">` + cards.map(c => `
+      <div class="verdict ${c.cls}">
+        <p class="vh">${c.h}</p>
+        <p class="vn">${c.n}</p>
+        <p>${c.p}</p>
+      </div>`).join('') + `</div>` +
+    (acciones.length ? `<div class="next"><h3>Qué mover primero</h3><ol>` +
+      acciones.map(a => `<li>${a}</li>`).join('') + `</ol></div>` : '');
+}
+
 function render() {
   const d = DATA, C = d.conversations;
+  renderResumen(d);
 
   // ---------- encabezado ----------
   $('#hdr-window').textContent = `${d.window.from} → ${d.window.to} · ${d.window.days} días`;
@@ -571,7 +712,7 @@ function render() {
     ['Conversaciones', fmt(C.total)],
     ['Respondieron', `${fmt(C.replied)} · ${pc(C.replyRate)}`],
     ['Canal principal', `${chName(topCh.channel)} · ${pc(topCh.n / C.total * 100)}`],
-    ['Fuentes con firma', fmt(d.sources.filter(isSigned).length)],
+    ['Origen identificado', fmt(d.sources.filter(isSigned).length)],
     ['Citas', fmt(Object.values(d.closers).reduce((a, c) => a + c.total, 0))]
   ].map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
 
@@ -580,9 +721,9 @@ function render() {
   $('#conv-kpis').innerHTML = [
     { k: 'Abiertas', v: fmt(C.total), d: `${(C.total / d.window.days).toFixed(0)} por día`, hi: 1 },
     { k: 'Respondieron', v: pc(C.replyRate), d: `${fmt(C.replied)} conversaciones` },
-    { k: '≥ 4 mensajes', v: pc(contR['>=4']), d: `${fmt(cont['>=4'])} conversaciones` },
-    { k: '≥ 6 mensajes', v: pc(contR['>=6']), d: `${fmt(cont['>=6'])} conversaciones` },
-    { k: '≥ 20 mensajes', v: pc(contR['>=20']), d: `${fmt(cont['>=20'])} conversaciones` },
+    { k: 'Pasan del saludo', v: pc(contR['>=4']), d: `${fmt(cont['>=4'])} llegan a 4 mensajes` },
+    { k: 'Conversan', v: pc(contR['>=6']), d: `${fmt(cont['>=6'])} llegan a 6 mensajes` },
+    { k: 'Conversan mucho', v: pc(contR['>=20']), d: `${fmt(cont['>=20'])} llegan a 20 mensajes` },
     { k: 'Mensajes por conv.', v: String(C.avgMsgs).replace('.', ','), d: 'promedio' }
   ].map(x => `<div class="kpi${x.hi ? ' hi' : ''}"><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="d">${x.d}</div></div>`).join('');
 
@@ -635,9 +776,9 @@ function render() {
   bars($('#cont-rows'), CK.map((k, i) => {
     const prev = i ? cont[CK[i - 1]] : null;
     return {
-      l: k.replace('>=', '≥ ') + ' mensajes', v: cont[k],
+      l: 'Al menos ' + k.replace('>=', '') + ' mensajes', v: cont[k],
       t: `${fmt(cont[k])}  ${pc(contR[k])}`,
-      tip: tipHTML(k.replace('>=', '≥ ') + ' mensajes', [
+      tip: tipHTML('Al menos ' + k.replace('>=', '') + ' mensajes', [
         ['Conversaciones', fmt(cont[k])],
         ['Del total', pc(contR[k])],
         ...(prev ? [
@@ -659,7 +800,7 @@ function render() {
   }
 
   // ---------- fuentes ----------
-  const GROUPS = ['Instagram', 'TikTok', 'YouTube', 'WhatsApp', 'Campañas', 'Otros', 'Sin atribuir'];
+  const GROUPS = ['Instagram', 'TikTok', 'YouTube', 'WhatsApp', 'Campañas', 'Otros', 'Origen desconocido'];
   const maxSrc = Math.max(1, ...d.sources.map(s => s.convs));
   let rows = '';
   for (const grp of GROUPS) {
@@ -675,18 +816,18 @@ function render() {
       const rate = apRate >= 2 ? 'ok' : (apRate > 0 ? 'warn' : 'crit');
       const tip = tipHTML(s.label, [
         ['Conversaciones', fmt(s.convs)],
-        ['Llegan a ≥ 4 msgs', `${fmt(s.cont4)} · ${pc(s.cont4Rate)}`],
+        ['Pasan del saludo', `${fmt(s.cont4)} · ${pc(s.cont4Rate)}`],
         ['Respondieron', `${fmt(s.replied)} · ${pc(s.replyRate)}`],
-        ['Msgs por conversación', String(s.avgMsgs).replace('.', ',')],
+        ['Mensajes por conversación', String(s.avgMsgs).replace('.', ',')],
         ['Contactos únicos', fmt(s.contacts)],
         ['Calificados', fmt(s.qualified)],
         ['Citas atribuibles', `<strong>${fmt(ap)}</strong> · ${pc(apRate)}`],
         ['— de esas, las cerró el bot', fmt(s.apptBot ?? 0)],
       ], isSigned(s)
-        ? 'Fuente firmada: el trigger link deja su texto en el primer mensaje.'
-        : 'Sin firma: clasificada solo por canal. Dice por dónde entró, no qué la motivó.');
+        ? 'Origen identificado: la persona llegó por un enlace que deja su rastro escrito en el primer mensaje, así que sabemos exactamente de dónde viene.'
+        : 'Origen desconocido: solo sabemos el canal por el que entró, no qué la motivó. Técnicamente, el primer mensaje no traía la firma de ningún enlace rastreable.');
       return `<tr data-src="${esc(s.key)}" data-tip="${esc(tip)}">
-        <td>${s.label}${isSigned(s) ? '' : ' <span class="tag">sin firma</span>'}</td>
+        <td>${s.label}${isSigned(s) ? '' : ' <span class="tag">origen desconocido</span>'}</td>
         <td class="n" data-sort="${s.convs}"><span class="minibar" style="width:${w}px"></span>${fmt(s.convs)}</td>
         <td class="n" data-sort="${s.cont4Rate}">${fmt(s.cont4)} <span class="dim">${pc(s.cont4Rate)}</span></td>
         <td class="n" data-sort="${s.replied}">${fmt(s.replied)}</td>
@@ -702,9 +843,9 @@ function render() {
     qualified: a.qualified + s.qualified, appt: a.appt + (s.apptAfter ?? 0)
   }), { convs: 0, cont4: 0, replied: 0, qualified: 0, appt: 0 });
   $('#src-tbl').innerHTML = `<thead><tr>
-      <th>Fuente</th><th class="r">Conversaciones</th><th class="r">≥ 4 msgs</th>
-      <th class="r">Respondieron</th><th class="r">% responde</th><th class="r">Msgs / conv.</th>
-      <th class="r">Contactos calif.</th><th class="r">Citas atribuibles</th>
+      <th>Fuente</th><th class="r">Conversaciones</th><th class="r">Pasan del saludo</th>
+      <th class="r">Respondieron</th><th class="r">% responde</th><th class="r">Mensajes por conv.</th>
+      <th class="r">Calificados</th><th class="r">Citas atribuibles</th>
     </tr></thead><tbody>${rows}
     <tr class="tot"><td>Total</td><td class="n">${fmt(tot.convs)}</td><td class="n">${fmt(tot.cont4)}</td>
     <td class="n">${fmt(tot.replied)}</td><td class="n">${pc(tot.replied / tot.convs * 100)}</td>
@@ -718,13 +859,14 @@ function render() {
   const resto = tot.convs - nFirm;
   const resto4 = tot.cont4 - firm4;
   $('#src-callout').innerHTML = `<div class="callout warn">
-    <h4>Cobertura de la atribución</h4>
-    <p>De las <strong>${fmt(tot.convs)}</strong> conversaciones con mensajes leídos, solo <strong>${fmt(nFirm)}</strong>
-    (${pc(nFirm / tot.convs * 100)}) traen firma de trigger link. El resto se clasifica por canal:
-    sabemos por dónde entró, no qué la motivó.</p>
-    <p>Esa minoría se comporta de otra manera: <strong>${pc(firm4 / nFirm * 100)}</strong> de las conversaciones
-    con firma llega a cuatro mensajes, contra <strong>${pc(resto4 / resto * 100)}</strong> del resto.
-    Quien llega por un link que ya explica de dónde viene, conversa de verdad.</p></div>`;
+    <h4>De la mayoría no sabemos qué la trajo</h4>
+    <p>De <strong>${fmt(tot.convs)}</strong> conversaciones, solo <strong>${fmt(nFirm)}</strong>
+    (${pc(nFirm / tot.convs * 100)}) llegaron por un enlace de campaña que deja su rastro.
+    Del resto sabemos el canal, pero no qué las motivó.</p>
+    <p>Y esa minoría se comporta muy distinto: <strong>${pc(firm4 / nFirm * 100)}</strong> de ellas
+    pasa del saludo, contra <strong>${pc(resto4 / resto * 100)}</strong> de las demás.
+    Quien llega buscando algo concreto, conversa de verdad — por eso conviene saber
+    de dónde viene cada quien.</p></div>`;
 
   // ---------- embudo ----------
   const F = d.funnel, W = d.funnelWindow || {};
@@ -777,15 +919,16 @@ function render() {
   if (OV.sentWithoutQualified != null) {
     const sent = F.appointment_sent || 0, qual = F.qualified_lead || 0;
     $('#funnel-callout').innerHTML = `<div class="callout crit">
-      <h4>Las etiquetas no describen un recorrido</h4>
-      <p><strong>${fmt(OV.sentWithoutQualified)}</strong> de los ${fmt(sent)} envíos del link de agenda
-      salen <strong>sin que el contacto esté calificado</strong>, y a la vez hay
-      <strong>${fmt(OV.qualifiedWithoutSent)}</strong> calificados a los que nunca se les mandó.
-      Por eso «Calificado» puede ser menor que «Link enviado»: no es una etapa previa, es otra rama.</p>
-      <p>Más grave: <strong>los ${fmt(OV.bookedWithoutSent)} contactos con cita agendada no tienen
-      el tag de link enviado</strong> — ni uno. No es un embudo con fugas, son dos flujos que no se
-      hablan. Concuerda con el calendario: la mayoría de las citas entran por el booking widget,
-      que no pasa por el bot.</p>
+      <h4>Estos pasos no van uno detrás de otro</h4>
+      <p><strong>${fmt(OV.sentWithoutQualified)}</strong> de los ${fmt(sent)} envíos del enlace de agenda
+      salen <strong>sin haber calificado antes a la persona</strong>, y a la vez hay
+      <strong>${fmt(OV.qualifiedWithoutSent)}</strong> personas calificadas a las que nunca se les mandó.
+      Por eso «Calificado» sale por debajo de «Enlace de agenda enviado»: no es un paso previo,
+      es un camino aparte.</p>
+      <p>Y hay algo mayor: <strong>de las ${fmt(OV.bookedWithoutSent)} personas con cita, ninguna
+      pasó por el envío del enlace</strong>. No es un embudo con fugas, son dos caminos que no se
+      cruzan — casi todas las citas se reservan directamente en el calendario, sin hablar con
+      el bot.</p>
     </div>`;
   }
 
@@ -804,7 +947,7 @@ function render() {
           ['Citas atribuibles', fmt(r.s.apptAfter ?? 0)],
           ['— cerradas por el bot', fmt(r.s.apptBot ?? 0)],
         ], 'El embudo por etiqueta describe el estado del contacto, no la causa: los tags de GHL no traen fecha.'))}">` +
-        `<td>${r.s.label}${r.s.signed ? '' : ' <span class="tag warn">sin firma</span>'}</td>` +
+        `<td>${r.s.label}${r.s.signed ? '' : ' <span class="tag warn">origen desconocido</span>'}</td>` +
         order.map(k => `<td class="n">${r.v[k] ? fmt(r.v[k]) : '<span class="dim">—</span>'}</td>`).join('') +
         `</tr>`).join('') + `</tbody>`
     : `<tbody><tr><td class="dim">Ningún contacto del embudo tuvo conversación en la ventana.</td></tr></tbody>`;
@@ -838,7 +981,7 @@ function render() {
   const whenBars = (sel, items, empty) => bars($(sel), items.map(x => ({
     l: x.l, v: x.sent, t: `${fmt(x.sent)} · ${fmt(x.replied)} resp.`,
     tip: tipHTML(x.l, [
-      ['Conversaciones abiertas', fmt(x.sent)],
+      ['Conversaciones que se abrieron', fmt(x.sent)],
       ['Recibieron respuesta', fmt(x.replied)],
       ['Tasa de respuesta', pc(x.replied / Math.max(1, x.sent) * 100)],
     ], x.replied / Math.max(1, x.sent) > 0.5
@@ -871,7 +1014,7 @@ function render() {
       { k: 'Citas en el calendario', v: fmt(AP.total), d: 'ventana + 7 días', hi: 1 },
       { k: 'Las cerró el bot', v: fmt(bot), d: pc(bot / Math.max(1, AP.total) * 100) + ' del total' },
       { k: 'Tras una conversación', v: fmt(AP.afterConversation), d: 'creadas después de hablar' },
-      { k: 'Con tag appointment_booked', v: fmt(AP.taggedBooked), d: 'lo que se medía antes' },
+      { k: 'Lo que contábamos antes', v: fmt(AP.taggedBooked), d: 'según la marca del bot' },
     ].map(x => `<div class="kpi${x.hi ? ' hi' : ''}"><div class="k">${x.k}</div>
       <div class="v">${x.v}</div><div class="d">${x.d}</div></div>`).join('');
 
@@ -894,10 +1037,10 @@ function render() {
       <strong>${fmt(sinConv)}</strong> llegan por su cuenta al calendario: el lead ya tenía
       el enlace, o reservó sin pasar por el bot.</p>
       <p>El bot cierra <strong>${fmt(bot)}</strong> por sí mismo
-      (${pc(bot / Math.max(1, AP.total) * 100)}). El tag
-      <span class="mono">appointment_booked</span> marca
-      <strong>${fmt(AP.taggedBooked)}</strong>: ese tag mide cuándo cierra el bot,
-      no cuándo hay cita. Usarlo para atribuir fuentes subestimaba el resultado.</p>
+      (${pc(bot / Math.max(1, AP.total) * 100)}). La marca interna que usábamos antes para
+      contarlas señalaba solo <strong>${fmt(AP.taggedBooked)}</strong>, porque el bot la pone
+      únicamente cuando cierra él. Estas cifras salen del calendario, que es donde
+      las citas existen de verdad.</p>
     </div>`;
   }
 
@@ -920,9 +1063,9 @@ function render() {
   const ctryTip = c => tipHTML(`${c.flag} ${c.country}`, [
     ['Conversaciones', fmt(c.convs)],
     ['Respondieron', `${fmt(c.replied)} · ${pc(c.replyRate)}`],
-    ['Llegan a ≥ 4 msgs', `${fmt(c.cont4)} · ${pc(c.cont4Rate)}`],
-    ['Msgs por conversación', String(c.avgMsgs).replace('.', ',')],
-    ['Envíos fallidos', `${fmt(c.failed)}/${fmt(c.sent)} · ${pc(c.failRate)}`],
+    ['Pasan del saludo', `${fmt(c.cont4)} · ${pc(c.cont4Rate)}`],
+    ['Mensajes por conversación', String(c.avgMsgs).replace('.', ',')],
+    ['Envíos que no llegaron', `${fmt(c.failed)}/${fmt(c.sent)} · ${pc(c.failRate)}`],
     ['Agendados', fmt(c.booked)],
   ], c.convs < MIN_CTRY ? `Menos de ${MIN_CTRY} conversaciones: el porcentaje es ruido.` : null);
 
@@ -944,8 +1087,8 @@ function render() {
 
   $('#ctry-tbl').innerHTML = `<thead><tr>
       <th>País</th><th class="r">Conversaciones</th><th class="r">Contactos</th>
-      <th class="r">Respondieron</th><th class="r">% responde</th><th class="r">≥ 4 msgs</th>
-      <th class="r">Msgs / conv.</th><th class="r">% envíos fallidos</th><th class="r">Agendados</th>
+      <th class="r">Respondieron</th><th class="r">% responde</th><th class="r">Pasan del saludo</th>
+      <th class="r">Mensajes por conv.</th><th class="r">Envíos que no llegaron</th><th class="r">Agendados</th>
     </tr></thead><tbody>` + CT.map(c => {
       const f = c.failRate >= 20 ? 'crit' : (c.failRate >= 8 ? 'warn' : 'ok');
       return `<tr data-tip="${esc(ctryTip(c))}">
@@ -961,6 +1104,9 @@ function render() {
       </tr>`;
     }).join('') + `</tbody>`;
   sortable($('#ctry-tbl'));
+  // Por debajo del umbral el porcentaje es ruido, así que esas filas no
+  // encabezan la tabla: quedan a un clic.
+  prune($('#ctry-tbl'), CT.filter(c => c.convs >= MIN_CTRY).length || 12, 'países');
 
   // Números que rebotan degradan la reputación del remitente, así que el costo
   // no se queda en el país que falla.
@@ -1024,6 +1170,7 @@ function render() {
         <td class="n" data-sort="${c.bookedRate}">${pc(c.bookedRate)}</td>
       </tr>`).join('') + `</tbody>`;
     sortable($('#base-tbl'));
+    prune($('#base-tbl'), BC.filter(c => c.contacts >= 200).length || 12, 'países');
   }
 
   $('#foot-gen').innerHTML = `Generado el ${g.toLocaleString('es', { dateStyle: 'long', timeStyle: 'short' })}
