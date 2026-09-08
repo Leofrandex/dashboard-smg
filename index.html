@@ -138,14 +138,14 @@ footer code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;co
           <div><dt>Escala</dt><dd>5.897 conversaciones</dd></div>
         </dl>
         <div class="card-body">
-          <p class="approach">Reconstruye el embudo hilo por hilo: cada conversación leída mensaje a mensaje, con latencias reales y no estimadas. La atribución sale de la firma que el trigger link deja en el primer mensaje del lead.</p>
+          <p class="approach">Reconstruye el embudo hilo por hilo: cada conversación leída mensaje a mensaje, con latencias reales y no estimadas. La atribución sale de la firma que el trigger link deja en el primer mensaje del lead. Las citas se cruzan por fecha contra el calendario, así que solo cuenta la que se creó después de la conversación.</p>
           <div>
             <p class="list-label">Qué mide</p>
             <ul class="blocks">
           <li>Conversaciones abiertas, respondidas y continuadas</li>
           <li>Timeline diaria apilada por canal</li>
           <li>Canal y número de entrada</li>
-          <li>Fuentes de tráfico cruzadas con agenda</li>
+          <li>Fuentes de tráfico con citas atribuibles por fecha</li>
           <li>Embudo del agente de IA, global y por fuente</li>
           <li>Latencia del lead y la nuestra, por separado</li>
           <li>Hora y día de apertura</li>
@@ -158,6 +158,8 @@ footer code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;co
           <ul class="blocks">
             <li>Profundidad de conversación (≥4, ≥6, ≥20 mensajes)</li>
             <li>Atribución por firma de trigger link</li>
+            <li>Citas atribuidas por fecha, no por etiqueta</li>
+            <li>Cuántas citas cerró el bot por sí mismo</li>
             <li>Los ~106 k contactos de la base completa por país</li>
           </ul>
         </div>
@@ -209,5 +211,5 @@ footer code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;co
 
 <footer class="wrap">
   <p>Cifras agregadas: estas páginas no publican nombres, teléfonos ni correos de leads.</p>
-  <p>Los datos de la versión actual llegan hasta el <code>2026-09-04</code>.</p>
+  <p>Los datos de la versión actual llegan hasta el <code>2026-09-07</code>.</p>
 </footer>
