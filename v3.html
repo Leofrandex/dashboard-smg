@@ -1,0 +1,941 @@
+﻿<title>SMG AI Agent Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  color-scheme: light;
+  --plane:#f2f2ee; --surface:#fbfbfa; --surface-2:#f6f6f3;
+  --ink:#14161a; --ink-2:#565b62; --muted:#8b9098;
+  --line:#e2e2db; --line-soft:#ecece6; --axis:#c6c6bd;
+  --accent:#1c4f8f; --accent-soft:rgba(28,79,143,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#00a0a8; --s7:#4a3aa7;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --good-ink:#006300; --crit-ink:#a52b2b; --warn-ink:#8a6100;
+  --seq-1:#cde2fb; --seq-2:#9ec5f4; --seq-3:#5598e7; --seq-4:#2a78d6; --seq-5:#1c5cab; --seq-6:#104281;
+  --ring:rgba(20,22,26,.10);
+  --shadow:0 1px 2px rgba(20,22,26,.05), 0 8px 24px -18px rgba(20,22,26,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --plane:#0d0f12; --surface:#16181c; --surface-2:#1b1e23;
+    --ink:#f1f2f4; --ink-2:#a8aeb6; --muted:#7f858d;
+    --line:#262a30; --line-soft:#1f2228; --axis:#3a3f47;
+    --accent:#7fb0ee; --accent-soft:rgba(127,176,238,.12);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0d9aa2; --s7:#9085e9;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+    --good-ink:#3fc23f; --crit-ink:#f08080; --warn-ink:#e0ae4a;
+    --seq-1:#104281; --seq-2:#1c5cab; --seq-3:#256abf; --seq-4:#2a78d6; --seq-5:#5598e7; --seq-6:#9ec5f4;
+    --ring:rgba(255,255,255,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --plane:#0d0f12; --surface:#16181c; --surface-2:#1b1e23;
+  --ink:#f1f2f4; --ink-2:#a8aeb6; --muted:#7f858d;
+  --line:#262a30; --line-soft:#1f2228; --axis:#3a3f47;
+  --accent:#7fb0ee; --accent-soft:rgba(127,176,238,.12);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#0d9aa2; --s7:#9085e9;
+  --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+  --good-ink:#3fc23f; --crit-ink:#f08080; --warn-ink:#e0ae4a;
+  --seq-1:#104281; --seq-2:#1c5cab; --seq-3:#256abf; --seq-4:#2a78d6; --seq-5:#5598e7; --seq-6:#9ec5f4;
+  --ring:rgba(255,255,255,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--plane); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif; text-wrap:balance; margin:0; letter-spacing:-.02em}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---------- header ---------- */
+header.top{background:var(--surface);border-bottom:1px solid var(--line);padding:44px 0 30px}
+.eyebrow{
+  display:flex;flex-wrap:wrap;gap:16px;align-items:center;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;
+}
+.eyebrow span:first-child{color:var(--accent)}
+header.top h1{font-size:clamp(28px,4.2vw,42px);line-height:1.08;font-weight:700}
+header.top .sub{margin:14px 0 0;font-size:18px;color:var(--ink-2);max-width:64ch}
+/* ---------- secciones ---------- */
+section{padding:46px 0;border-top:1px solid var(--line-soft)}
+section:first-of-type{border-top:none}
+.sec-head{margin-bottom:22px}
+.kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+section h2{font-size:clamp(21px,2.7vw,28px);font-weight:600;max-width:26ch}
+.sec-head p{margin:12px 0 0;color:var(--ink-2);font-size:16px;max-width:72ch}
+
+/* ---------- tarjetas ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:12px;margin-bottom:26px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-family:Archivo,sans-serif;font-size:29px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15;margin:5px 0 2px}
+.kpi .d{font-size:12.5px;color:var(--ink-2)}
+.kpi.hi .v{color:var(--accent)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-a{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+@media(max-width:860px){.grid2,.grid-a{grid-template-columns:1fr}}
+.card h3{font-size:16px;font-weight:600;margin-bottom:3px}
+.card .note{font-size:13px;color:var(--muted);margin-bottom:14px}
+
+/* ---------- barras ---------- */
+.rows{display:flex;flex-direction:column;gap:9px}
+.row{display:grid;grid-template-columns:150px 1fr auto;gap:12px;align-items:center;font-size:13.5px}
+.row .lbl{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.track{height:9px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.fill{height:100%;border-radius:3px;background:var(--accent)}
+.row .val{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:52px;text-align:right}
+
+/* ---------- timeline apilada ---------- */
+.tl{display:flex;align-items:flex-end;gap:3px;height:180px;padding-top:8px}
+.tl .col{flex:1;display:flex;flex-direction:column-reverse;min-width:0;position:relative}
+.tl .seg{width:100%}
+.tl-axis{display:flex;gap:3px;margin-top:7px}
+.tl-axis span{flex:1;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* ---------- tablas ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:760px}
+th{
+  text-align:left;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500;
+  padding:10px 13px;border-bottom:1px solid var(--line);background:var(--surface-2);white-space:nowrap;
+}
+th.r{text-align:right}
+td{padding:9px 13px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+td.n{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+tr.grp td{
+  background:var(--surface-2);font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--accent);
+  padding:7px 13px;font-weight:600;
+}
+tr.tot td{border-top:2px solid var(--line);font-weight:600;background:var(--surface-2)}
+.minibar{display:inline-block;height:6px;border-radius:2px;background:var(--accent);vertical-align:middle;margin-right:7px}
+.dim{color:var(--muted)}
+
+.tag{
+  display:inline-block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:9.5px;
+  letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;font-weight:500;
+}
+.tag.ok{background:rgba(12,163,12,.12);color:var(--good-ink)}
+.tag.warn{background:rgba(250,178,25,.15);color:var(--warn-ink)}
+.tag.crit{background:rgba(208,59,59,.12);color:var(--crit-ink)}
+
+.callout{border:1px solid var(--line);border-left:3px solid var(--accent);background:var(--surface);border-radius:0 7px 7px 0;padding:16px 20px;margin:20px 0;box-shadow:var(--shadow)}
+.callout.warn{border-left-color:var(--warn)}
+.callout.crit{border-left-color:var(--crit)}
+.callout h4{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+.callout.warn h4{color:var(--warn-ink)} .callout.crit h4{color:var(--crit-ink)}
+.callout p{margin:8px 0 0;font-size:14.5px;color:var(--ink-2)} .callout p:first-of-type{margin-top:0}
+.callout strong{color:var(--ink)}
+
+footer{background:var(--surface);border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:13px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ---------- embudo (intro) ---------- */
+.funnel-bar{display:flex;flex-direction:column;gap:8px;margin:20px 0}
+.fstep{display:grid;grid-template-columns:150px 1fr 120px;gap:12px;align-items:center}
+.fstep-l{font-size:13px;color:var(--ink-2)}
+.fstep-bar{height:22px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.fstep-bar span{display:block;height:100%;background:var(--s1);border-radius:4px}
+.fstep-v{font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+
+/* ---------- podado de tablas largas ---------- */
+tr.beyond{display:none}
+table.show-all tr.beyond{display:table-row}
+.more-btn{
+  margin:9px 0 0;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1px solid var(--line);border-radius:5px;
+  padding:6px 12px;color:var(--ink-2);cursor:pointer;
+}
+.more-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ---------- capa de interacción ---------- */
+#tip{
+  position:fixed;z-index:60;pointer-events:none;opacity:0;
+  transition:opacity .12s ease;max-width:320px;
+  background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);
+  padding:9px 11px;font-size:12.5px;line-height:1.45;
+}
+#tip.on{opacity:1}
+#tip .tip-h{font-family:Archivo,sans-serif;font-weight:600;font-size:13px;margin-bottom:5px}
+#tip dl{margin:0;display:grid;grid-template-columns:auto auto;gap:2px 12px}
+#tip dt{color:var(--muted)} #tip dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+#tip .tip-n{margin:6px 0 0;color:var(--ink-2);font-size:12px;border-top:1px solid var(--line-soft);padding-top:6px}
+
+[data-tip]{cursor:help}
+.row[data-tip]:hover .track,.col[data-tip]:hover{filter:brightness(1.12)}
+
+/* tablas ordenables */
+th.sortable{cursor:pointer;user-select:none;position:relative;padding-right:15px}
+th.sortable:hover{color:var(--accent)}
+th.sortable::after{
+  content:"";position:absolute;right:5px;top:50%;margin-top:-2px;
+  border:3px solid transparent;border-top-color:var(--axis);opacity:.35;
+}
+th.sortable.asc::after{border-top-color:transparent;border-bottom-color:var(--accent);margin-top:-5px;opacity:1}
+th.sortable.desc::after{border-top-color:var(--accent);opacity:1}
+.sort-hint{font-size:11.5px;color:var(--muted);margin:7px 0 0}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{font:inherit;font-size:12px;display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface);color:var(--ink-2);cursor:pointer}
+.chip i{width:8px;height:8px;border-radius:2px;display:inline-block;flex:0 0 auto}
+.chip[aria-pressed="false"]{opacity:.4;text-decoration:line-through}
+.chip:hover{border-color:var(--accent)}
+.chip.all{color:var(--ink);font-weight:600}
+.date-filter{display:flex;gap:10px;align-items:center;font-size:12px;color:var(--ink-2)}
+.date-filter input{font:inherit;padding:3px 6px;border:1px solid var(--line);
+  border-radius:4px;background:var(--surface);color:var(--ink)}
+.date-filter button{font:inherit;padding:3px 8px;border:1px solid var(--line);
+  border-radius:4px;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.swatch{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:7px}
+
+/* Grafica agrupada de paises: --fg2/--bg2 del brief no existen aca, van
+   --ink-2/--surface-2 (ver mapeo de tokens en el reporte de la Task 8). */
+.cchart{display:flex;flex-direction:column;gap:14px;margin:18px 0}
+.cgroup{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center}
+.cgroup-l{font-size:13px;color:var(--ink-2)}
+.cgroup-bars{display:flex;flex-direction:column;gap:3px}
+.cbar{position:relative;height:13px;background:var(--surface-2);border-radius:3px}
+.cbar span{display:block;height:100%;border-radius:3px}
+.cbar em{position:absolute;right:6px;top:-1px;font-size:10px;font-style:normal;
+  color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px} header.top{padding:32px 0 24px} section{padding:34px 0}
+  .row{grid-template-columns:110px 1fr auto}
+  #tip{display:none}
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow"><span>Bernard Kizer</span><span id="hdr-window"></span><span id="hdr-gen"></span></div>
+    <h1>SMG AI Agent Hub</h1>
+    <p class="sub">Qué conversaciones se abren, de dónde vienen y cuáles llegan a una agenda.</p>
+  </div>
+</header>
+
+<section id="intro">
+  <div class="wrap">
+    <div class="kpis" id="intro-kpis"></div>
+    <div class="funnel-bar" id="intro-funnel"></div>
+    <p class="note" id="intro-note"></p>
+  </div>
+</section>
+
+<section id="conversaciones">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">01 · Conversaciones</p>
+      <h2 id="conv-title">El volumen no es el problema</h2>
+      <p id="conv-lede"></p>
+    </div>
+    <div class="kpis" id="conv-kpis"></div>
+    <div class="grid-a">
+      <div class="card">
+        <h3>Conversaciones abiertas por día</h3>
+        <p class="note">Apiladas por canal del último mensaje.</p>
+        <div class="tl" id="tl"></div>
+        <div class="tl-axis" id="tl-axis"></div>
+        <div class="legend" id="tl-legend"></div>
+      </div>
+      <div class="card">
+        <h3>Canal de entrada</h3>
+        <p class="note">Sobre los canales de entrada listados (sin SMS no-show ni llamadas).</p>
+        <div class="rows" id="chan-rows"></div>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="card">
+        <h3>¿Hasta dónde llega la conversación?</h3>
+        <p class="note">De todo lo que se abrió, qué se cae en cada paso y qué queda.</p>
+        <div class="rows" id="cont-rows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fuentes">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">02 · Fuentes de tráfico</p>
+      <h2>De dónde vienen, y cuáles agendan</h2>
+      <div class="date-filter">
+        <label>Desde <input type="date" id="src-from"></label>
+        <label>Hasta <input type="date" id="src-to"></label>
+        <button id="src-reset">Toda la ventana</button>
+      </div>
+    </div>
+    <div class="chips" id="src-chips"></div>
+    <div class="tbl-wrap"><table id="src-tbl"></table></div>
+    <p class="note" id="src-foot"></p>
+  </div>
+</section>
+
+<section id="paises">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker">03 · Geografía</p>
+      <h2>De qué países llegan, y cuáles contestan</h2>
+      <p id="ctry-lede"></p>
+    </div>
+    <div class="card">
+      <h3>Los doce primeros, volumen y calidad en la misma vista</h3>
+      <p class="note">Antes eran tres vistas en un selector y no se podían comparar entre sí. Una
+        sola gráfica con tres barras por país deja ver de un golpe que el volumen y la calidad
+        de la respuesta no coinciden.</p>
+      <div class="cchart" id="ctry-chart"></div>
+      <div class="legend" id="ctry-legend"></div>
+      <p class="note" id="ctry-chart-note"></p>
+    </div>
+    <div class="tbl-wrap" style="margin-top:16px"><table id="ctry-tbl"></table></div>
+    <div id="ctry-callout"></div>
+  </div>
+</section>
+
+
+<footer>
+  <div class="wrap"><div id="foot-gen"></div></div>
+</footer>
+
+<script>
+const DATA = {"generatedAt":"2026-09-09T16:51:29Z","window":{"days":14,"from":"2026-08-26","to":"2026-09-09"},"conversations":{"total":5473,"withMessages":5468,"replied":3406,"replyRate":62.3,"continuity":{">=1":5468,">=2":4455,">=4":2468,">=6":1569,">=10":880,">=20":483},"continuityRate":{">=1":100.0,">=2":81.5,">=4":45.1,">=6":28.7,">=10":16.1,">=20":8.8},"byDay":[{"day":"2026-08-26","n":385,"chan":{"INSTAGRAM":107,"FACEBOOK":17,"EMAIL":13,"NO_SHOW":3,"CAMPAIGN_EMAIL":244,"WHATSAPP":1}},{"day":"2026-08-27","n":271,"chan":{"INSTAGRAM":176,"FACEBOOK":51,"EMAIL":40,"NO_SHOW":3,"WHATSAPP":1}},{"day":"2026-08-28","n":636,"chan":{"INSTAGRAM":542,"FACEBOOK":58,"EMAIL":28,"NO_SHOW":6,"WHATSAPP":2}},{"day":"2026-08-29","n":209,"chan":{"INSTAGRAM":142,"FACEBOOK":41,"EMAIL":18,"NO_SHOW":7,"WHATSAPP":1}},{"day":"2026-08-30","n":277,"chan":{"INSTAGRAM":129,"WHATSAPP":119,"FACEBOOK":17,"EMAIL":8,"NO_SHOW":4}},{"day":"2026-08-31","n":489,"chan":{"INSTAGRAM":422,"WHATSAPP":23,"EMAIL":18,"FACEBOOK":18,"NO_SHOW":8}},{"day":"2026-09-01","n":661,"chan":{"INSTAGRAM":570,"WHATSAPP":59,"EMAIL":13,"NO_SHOW":8,"FACEBOOK":11}},{"day":"2026-09-02","n":361,"chan":{"EMAIL":19,"INSTAGRAM":293,"WHATSAPP":21,"FACEBOOK":15,"NO_SHOW":12,"CALL":1}},{"day":"2026-09-03","n":226,"chan":{"INSTAGRAM":190,"FACEBOOK":15,"WHATSAPP":5,"CALL":1,"EMAIL":9,"NO_SHOW":6}},{"day":"2026-09-04","n":390,"chan":{"INSTAGRAM":346,"FACEBOOK":20,"WHATSAPP":6,"EMAIL":9,"NO_SHOW":7,"TIKTOK":2}},{"day":"2026-09-05","n":182,"chan":{"INSTAGRAM":139,"FACEBOOK":23,"WHATSAPP":6,"EMAIL":10,"NO_SHOW":4}},{"day":"2026-09-06","n":416,"chan":{"FACEBOOK":26,"INSTAGRAM":348,"WHATSAPP":35,"EMAIL":5,"NO_SHOW":1,"TIKTOK":1}},{"day":"2026-09-07","n":423,"chan":{"INSTAGRAM":365,"WHATSAPP":30,"FACEBOOK":7,"NO_SHOW":8,"EMAIL":12,"TIKTOK":1}},{"day":"2026-09-08","n":453,"chan":{"INSTAGRAM":417,"WHATSAPP":15,"NO_SHOW":9,"EMAIL":5,"FACEBOOK":7}},{"day":"2026-09-09","n":94,"chan":{"INSTAGRAM":79,"WHATSAPP":5,"EMAIL":4,"FACEBOOK":5,"CALL":1}}],"byChannel":[{"channel":"INSTAGRAM","n":4265},{"channel":"FACEBOOK","n":331},{"channel":"WHATSAPP","n":329},{"channel":"CAMPAIGN_EMAIL","n":244},{"channel":"EMAIL","n":211},{"channel":"NO_SHOW","n":86},{"channel":"TIKTOK","n":4},{"channel":"CALL","n":3}],"avgMsgs":6.58},"sources":[{"key":"ig_organico","label":"IG Orgánico / DM directo","group":"Instagram","signed":false,"dms":4263,"iniciadas":1624,"continuadas":860,"msgs":28676,"sinRespuesta":1285,"traspasos":1354,"contacts":4263,"contactsWithPhone":26,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":0.6,"iniciadasRate":38.1,"continuadasRate":53.0,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":17.7,"byDay":[{"day":"2026-08-26","dms":102,"iniciadas":14,"continuadas":7,"msgs":354,"sinRespuesta":84,"traspasos":4,"contacts":102,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-27","dms":163,"iniciadas":37,"continuadas":21,"msgs":871,"sinRespuesta":117,"traspasos":9,"contacts":163,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-28","dms":457,"iniciadas":331,"continuadas":164,"msgs":4532,"sinRespuesta":92,"traspasos":34,"contacts":457,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-29","dms":229,"iniciadas":101,"continuadas":54,"msgs":1746,"sinRespuesta":115,"traspasos":13,"contacts":229,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-30","dms":94,"iniciadas":67,"continuadas":38,"msgs":847,"sinRespuesta":20,"traspasos":7,"contacts":94,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-31","dms":352,"iniciadas":191,"continuadas":141,"msgs":3402,"sinRespuesta":141,"traspasos":20,"contacts":352,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-01","dms":525,"iniciadas":114,"continuadas":70,"msgs":3166,"sinRespuesta":20,"traspasos":391,"contacts":525,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":425,"iniciadas":79,"continuadas":37,"msgs":2473,"sinRespuesta":99,"traspasos":247,"contacts":425,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-03","dms":193,"iniciadas":53,"continuadas":30,"msgs":1261,"sinRespuesta":68,"traspasos":72,"contacts":193,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":304,"iniciadas":176,"continuadas":52,"msgs":1957,"sinRespuesta":87,"traspasos":41,"contacts":304,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-05","dms":204,"iniciadas":63,"continuadas":29,"msgs":1001,"sinRespuesta":112,"traspasos":29,"contacts":204,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-06","dms":177,"iniciadas":37,"continuadas":15,"msgs":708,"sinRespuesta":80,"traspasos":60,"contacts":177,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-07","dms":422,"iniciadas":56,"continuadas":25,"msgs":2007,"sinRespuesta":68,"traspasos":298,"contacts":422,"contactsWithPhone":7,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":406,"iniciadas":209,"continuadas":140,"msgs":3462,"sinRespuesta":95,"traspasos":102,"contacts":406,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-09","dms":210,"iniciadas":96,"continuadas":37,"msgs":889,"sinRespuesta":87,"traspasos":27,"contacts":210,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"sin_firma","label":"Origen desconocido","group":"Origen desconocido","signed":false,"dms":334,"iniciadas":4,"continuadas":0,"msgs":476,"sinRespuesta":329,"traspasos":1,"contacts":334,"contactsWithPhone":91,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":27.2,"iniciadasRate":1.2,"continuadasRate":0.0,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":119.0,"byDay":[{"day":"2026-08-26","dms":245,"iniciadas":1,"continuadas":0,"msgs":247,"sinRespuesta":244,"traspasos":0,"contacts":245,"contactsWithPhone":8,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-27","dms":5,"iniciadas":0,"continuadas":0,"msgs":14,"sinRespuesta":5,"traspasos":0,"contacts":5,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-28","dms":3,"iniciadas":0,"continuadas":0,"msgs":8,"sinRespuesta":3,"traspasos":0,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-29","dms":9,"iniciadas":0,"continuadas":0,"msgs":24,"sinRespuesta":9,"traspasos":0,"contacts":9,"contactsWithPhone":9,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-30","dms":5,"iniciadas":0,"continuadas":0,"msgs":11,"sinRespuesta":5,"traspasos":0,"contacts":5,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-31","dms":5,"iniciadas":0,"continuadas":0,"msgs":15,"sinRespuesta":5,"traspasos":0,"contacts":5,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-01","dms":10,"iniciadas":0,"continuadas":0,"msgs":25,"sinRespuesta":10,"traspasos":0,"contacts":10,"contactsWithPhone":9,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":9,"iniciadas":0,"continuadas":0,"msgs":26,"sinRespuesta":9,"traspasos":0,"contacts":9,"contactsWithPhone":8,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-03","dms":9,"iniciadas":0,"continuadas":0,"msgs":20,"sinRespuesta":9,"traspasos":0,"contacts":9,"contactsWithPhone":9,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":8,"iniciadas":1,"continuadas":0,"msgs":28,"sinRespuesta":6,"traspasos":1,"contacts":8,"contactsWithPhone":6,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-05","dms":4,"iniciadas":0,"continuadas":0,"msgs":11,"sinRespuesta":4,"traspasos":0,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-06","dms":4,"iniciadas":1,"continuadas":0,"msgs":7,"sinRespuesta":3,"traspasos":0,"contacts":4,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-07","dms":3,"iniciadas":0,"continuadas":0,"msgs":7,"sinRespuesta":3,"traspasos":0,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":12,"iniciadas":1,"continuadas":0,"msgs":26,"sinRespuesta":11,"traspasos":0,"contacts":12,"contactsWithPhone":11,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-09","dms":3,"iniciadas":0,"continuadas":0,"msgs":7,"sinRespuesta":3,"traspasos":0,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"fb_organico","label":"Facebook · DM directo","group":"Otros","signed":false,"dms":331,"iniciadas":172,"continuadas":82,"msgs":1734,"sinRespuesta":154,"traspasos":5,"contacts":331,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":0.0,"iniciadasRate":52.0,"continuadasRate":47.7,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":10.1,"byDay":[{"day":"2026-08-26","dms":13,"iniciadas":4,"continuadas":3,"msgs":145,"sinRespuesta":7,"traspasos":2,"contacts":13,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-27","dms":43,"iniciadas":8,"continuadas":2,"msgs":140,"sinRespuesta":34,"traspasos":1,"contacts":43,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-28","dms":61,"iniciadas":35,"continuadas":21,"msgs":350,"sinRespuesta":25,"traspasos":1,"contacts":61,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-29","dms":42,"iniciadas":29,"continuadas":12,"msgs":203,"sinRespuesta":13,"traspasos":0,"contacts":42,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-30","dms":22,"iniciadas":16,"continuadas":7,"msgs":168,"sinRespuesta":5,"traspasos":1,"contacts":22,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-31","dms":19,"iniciadas":11,"continuadas":3,"msgs":66,"sinRespuesta":8,"traspasos":0,"contacts":19,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-01","dms":13,"iniciadas":8,"continuadas":4,"msgs":36,"sinRespuesta":5,"traspasos":0,"contacts":13,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":9,"iniciadas":5,"continuadas":3,"msgs":37,"sinRespuesta":4,"traspasos":0,"contacts":9,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-03","dms":16,"iniciadas":11,"continuadas":3,"msgs":65,"sinRespuesta":5,"traspasos":0,"contacts":16,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":19,"iniciadas":9,"continuadas":4,"msgs":87,"sinRespuesta":10,"traspasos":0,"contacts":19,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-05","dms":26,"iniciadas":7,"continuadas":1,"msgs":72,"sinRespuesta":19,"traspasos":0,"contacts":26,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-06","dms":25,"iniciadas":14,"continuadas":9,"msgs":190,"sinRespuesta":11,"traspasos":0,"contacts":25,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-07","dms":10,"iniciadas":10,"continuadas":6,"msgs":108,"sinRespuesta":0,"traspasos":0,"contacts":10,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":8,"iniciadas":4,"continuadas":3,"msgs":56,"sinRespuesta":4,"traspasos":0,"contacts":8,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-09","dms":5,"iniciadas":1,"continuadas":1,"msgs":11,"sinRespuesta":4,"traspasos":0,"contacts":5,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"email_inbound","label":"Email entrante","group":"Otros","signed":false,"dms":186,"iniciadas":0,"continuadas":0,"msgs":264,"sinRespuesta":5,"traspasos":181,"contacts":186,"contactsWithPhone":177,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":95.2,"iniciadasRate":0.0,"continuadasRate":0.0,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":0,"byDay":[{"day":"2026-08-26","dms":5,"iniciadas":0,"continuadas":0,"msgs":6,"sinRespuesta":0,"traspasos":5,"contacts":5,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-27","dms":36,"iniciadas":0,"continuadas":0,"msgs":38,"sinRespuesta":0,"traspasos":36,"contacts":36,"contactsWithPhone":36,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-28","dms":33,"iniciadas":0,"continuadas":0,"msgs":40,"sinRespuesta":0,"traspasos":33,"contacts":33,"contactsWithPhone":33,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-29","dms":21,"iniciadas":0,"continuadas":0,"msgs":22,"sinRespuesta":0,"traspasos":21,"contacts":21,"contactsWithPhone":21,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-30","dms":10,"iniciadas":0,"continuadas":0,"msgs":28,"sinRespuesta":0,"traspasos":10,"contacts":10,"contactsWithPhone":10,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-31","dms":12,"iniciadas":0,"continuadas":0,"msgs":17,"sinRespuesta":2,"traspasos":10,"contacts":12,"contactsWithPhone":12,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-01","dms":9,"iniciadas":0,"continuadas":0,"msgs":11,"sinRespuesta":0,"traspasos":9,"contacts":9,"contactsWithPhone":7,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":9,"iniciadas":0,"continuadas":0,"msgs":12,"sinRespuesta":0,"traspasos":9,"contacts":9,"contactsWithPhone":9,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-03","dms":10,"iniciadas":0,"continuadas":0,"msgs":16,"sinRespuesta":1,"traspasos":9,"contacts":10,"contactsWithPhone":10,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":10,"iniciadas":0,"continuadas":0,"msgs":17,"sinRespuesta":1,"traspasos":9,"contacts":10,"contactsWithPhone":9,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-05","dms":7,"iniciadas":0,"continuadas":0,"msgs":7,"sinRespuesta":0,"traspasos":7,"contacts":7,"contactsWithPhone":7,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-06","dms":3,"iniciadas":0,"continuadas":0,"msgs":3,"sinRespuesta":0,"traspasos":3,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-07","dms":11,"iniciadas":0,"continuadas":0,"msgs":36,"sinRespuesta":0,"traspasos":11,"contacts":11,"contactsWithPhone":7,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":7,"iniciadas":0,"continuadas":0,"msgs":7,"sinRespuesta":1,"traspasos":6,"contacts":7,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-09","dms":3,"iniciadas":0,"continuadas":0,"msgs":4,"sinRespuesta":0,"traspasos":3,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"ig_kw_migrana","label":"IG Keyword · MIGRAÑA","group":"Instagram","signed":true,"dms":139,"iniciadas":121,"continuadas":109,"msgs":2841,"sinRespuesta":0,"traspasos":18,"contacts":139,"contactsWithPhone":130,"qualified":9,"agendadas":4,"agendadasBot":3,"phoneRate":93.5,"iniciadasRate":87.1,"continuadasRate":90.1,"qualifiedRate":6.5,"agendadasRate":2.9,"avgMsgs":23.5,"byDay":[{"day":"2026-09-01","dms":77,"iniciadas":68,"continuadas":61,"msgs":1604,"sinRespuesta":0,"traspasos":9,"contacts":77,"contactsWithPhone":72,"qualified":7,"agendadas":3,"agendadasBot":2},{"day":"2026-09-02","dms":36,"iniciadas":29,"continuadas":25,"msgs":731,"sinRespuesta":0,"traspasos":7,"contacts":36,"contactsWithPhone":32,"qualified":1,"agendadas":0,"agendadasBot":0},{"day":"2026-09-03","dms":8,"iniciadas":7,"continuadas":7,"msgs":162,"sinRespuesta":0,"traspasos":1,"contacts":8,"contactsWithPhone":8,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":5,"iniciadas":5,"continuadas":4,"msgs":106,"sinRespuesta":0,"traspasos":0,"contacts":5,"contactsWithPhone":5,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-05","dms":6,"iniciadas":5,"continuadas":5,"msgs":97,"sinRespuesta":0,"traspasos":1,"contacts":6,"contactsWithPhone":6,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-06","dms":3,"iniciadas":3,"continuadas":3,"msgs":58,"sinRespuesta":0,"traspasos":0,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-07","dms":2,"iniciadas":2,"continuadas":2,"msgs":33,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":2,"iniciadas":2,"continuadas":2,"msgs":50,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":1,"agendadas":1,"agendadasBot":1}]},{"key":"campana_wa","label":"Campaña saliente WhatsApp","group":"Campañas","signed":false,"dms":119,"iniciadas":8,"continuadas":5,"msgs":226,"sinRespuesta":111,"traspasos":0,"contacts":119,"contactsWithPhone":119,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":100.0,"iniciadasRate":6.7,"continuadasRate":62.5,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":28.2,"byDay":[{"day":"2026-08-30","dms":119,"iniciadas":8,"continuadas":5,"msgs":226,"sinRespuesta":111,"traspasos":0,"contacts":119,"contactsWithPhone":119,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"lnk_ig_keyword_trigger_higado_260904","label":"IG Keyword · HIGADO","group":"Instagram","signed":true,"dms":75,"iniciadas":72,"continuadas":58,"msgs":1340,"sinRespuesta":0,"traspasos":3,"contacts":75,"contactsWithPhone":73,"qualified":8,"agendadas":4,"agendadasBot":4,"phoneRate":97.3,"iniciadasRate":96.0,"continuadasRate":80.6,"qualifiedRate":10.7,"agendadasRate":5.3,"avgMsgs":18.6,"byDay":[{"day":"2026-09-06","dms":7,"iniciadas":7,"continuadas":5,"msgs":124,"sinRespuesta":0,"traspasos":0,"contacts":7,"contactsWithPhone":7,"qualified":1,"agendadas":1,"agendadasBot":1},{"day":"2026-09-07","dms":49,"iniciadas":46,"continuadas":39,"msgs":913,"sinRespuesta":0,"traspasos":3,"contacts":49,"contactsWithPhone":48,"qualified":5,"agendadas":2,"agendadasBot":2},{"day":"2026-09-08","dms":15,"iniciadas":15,"continuadas":10,"msgs":251,"sinRespuesta":0,"traspasos":0,"contacts":15,"contactsWithPhone":14,"qualified":2,"agendadas":1,"agendadasBot":1},{"day":"2026-09-09","dms":4,"iniciadas":4,"continuadas":4,"msgs":52,"sinRespuesta":0,"traspasos":0,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"wa_inbound","label":"WhatsApp directo","group":"WhatsApp","signed":false,"dms":8,"iniciadas":8,"continuadas":8,"msgs":210,"sinRespuesta":0,"traspasos":0,"contacts":8,"contactsWithPhone":8,"qualified":3,"agendadas":1,"agendadasBot":1,"phoneRate":100.0,"iniciadasRate":100.0,"continuadasRate":100.0,"qualifiedRate":37.5,"agendadasRate":12.5,"avgMsgs":26.2,"byDay":[{"day":"2026-08-26","dms":1,"iniciadas":1,"continuadas":1,"msgs":4,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-01","dms":1,"iniciadas":1,"continuadas":1,"msgs":91,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":1,"iniciadas":1,"continuadas":1,"msgs":9,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-04","dms":1,"iniciadas":1,"continuadas":1,"msgs":11,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":1,"agendadas":1,"agendadasBot":1},{"day":"2026-09-07","dms":2,"iniciadas":2,"continuadas":2,"msgs":46,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":1,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":1,"iniciadas":1,"continuadas":1,"msgs":30,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-09","dms":1,"iniciadas":1,"continuadas":1,"msgs":19,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":1,"agendadas":0,"agendadasBot":0}]},{"key":"ig_kw_cambio","label":"IG Keyword · CAMBIO","group":"Instagram","signed":true,"dms":6,"iniciadas":4,"continuadas":3,"msgs":116,"sinRespuesta":0,"traspasos":2,"contacts":6,"contactsWithPhone":5,"qualified":1,"agendadas":0,"agendadasBot":0,"phoneRate":83.3,"iniciadasRate":66.7,"continuadasRate":75.0,"qualifiedRate":16.7,"agendadasRate":0.0,"avgMsgs":29.0,"byDay":[{"day":"2026-08-27","dms":2,"iniciadas":1,"continuadas":0,"msgs":23,"sinRespuesta":0,"traspasos":1,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-08-28","dms":2,"iniciadas":2,"continuadas":2,"msgs":60,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":1,"agendadas":0,"agendadasBot":0},{"day":"2026-08-29","dms":1,"iniciadas":1,"continuadas":1,"msgs":8,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":0,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-02","dms":1,"iniciadas":0,"continuadas":0,"msgs":25,"sinRespuesta":0,"traspasos":1,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"lnk_ig_kwt_tiroides_260908","label":"IG Keyword · TIROIDES","group":"Instagram","signed":true,"dms":3,"iniciadas":2,"continuadas":2,"msgs":51,"sinRespuesta":0,"traspasos":1,"contacts":3,"contactsWithPhone":3,"qualified":1,"agendadas":1,"agendadasBot":0,"phoneRate":100.0,"iniciadasRate":66.7,"continuadasRate":100.0,"qualifiedRate":33.3,"agendadasRate":33.3,"avgMsgs":25.5,"byDay":[{"day":"2026-09-09","dms":3,"iniciadas":2,"continuadas":2,"msgs":51,"sinRespuesta":0,"traspasos":1,"contacts":3,"contactsWithPhone":3,"qualified":1,"agendadas":1,"agendadasBot":0}]},{"key":"tt_bio","label":"TikTok · Bio","group":"TikTok","signed":true,"dms":2,"iniciadas":2,"continuadas":2,"msgs":52,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":1,"agendadas":1,"agendadasBot":0,"phoneRate":100.0,"iniciadasRate":100.0,"continuadasRate":100.0,"qualifiedRate":50.0,"agendadasRate":50.0,"avgMsgs":26.0,"byDay":[{"day":"2026-09-03","dms":1,"iniciadas":1,"continuadas":1,"msgs":14,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0},{"day":"2026-09-08","dms":1,"iniciadas":1,"continuadas":1,"msgs":38,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":1,"agendadas":1,"agendadasBot":0}]},{"key":"lnk_ig_keyword_trigger_quiero_260904","label":"IG Keyword · QUIERO","group":"Instagram","signed":true,"dms":1,"iniciadas":1,"continuadas":1,"msgs":6,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":100.0,"iniciadasRate":100.0,"continuadasRate":100.0,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":6.0,"byDay":[{"day":"2026-09-06","dms":1,"iniciadas":1,"continuadas":1,"msgs":6,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0}]},{"key":"ig_kw_clase","label":"IG Keyword · CLASE","group":"Instagram","signed":true,"dms":1,"iniciadas":1,"continuadas":0,"msgs":4,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0,"phoneRate":100.0,"iniciadasRate":100.0,"continuadasRate":0.0,"qualifiedRate":0.0,"agendadasRate":0.0,"avgMsgs":4.0,"byDay":[{"day":"2026-09-04","dms":1,"iniciadas":1,"continuadas":0,"msgs":4,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0}]}],"unknownLinkHosts":[["services.msgsndr.com",248],["storage.googleapis.com",237],["web.bernardkizer.com",206],["docs.google.com",81],["forms.gle",63]],"threadsWithoutDay":0,"numbers":[{"label":"Bot","convs":244,"replied":244,"booked":9,"replyRate":100.0}],"funnel":{"context_ready":345,"profile_ready":238,"qualified_lead":104,"appointment_sent":160,"appointment_booked":40,"ai_attended":72},"countries":[{"iso":"US","country":"Estados Unidos","flag":"🇺🇸","dms":189,"iniciadas":25,"continuadas":18,"msgs":829,"sinRespuesta":114,"traspasos":50,"contacts":189,"contactsWithPhone":189,"qualified":3,"agendadas":2,"agendadasBot":1,"sent":552,"failed":7,"failRate":1.3,"phoneRate":100.0,"avgMsgs":33.2},{"iso":"VE","country":"Venezuela","flag":"🇻🇪","dms":151,"iniciadas":79,"continuadas":71,"msgs":1946,"sinRespuesta":38,"traspasos":34,"contacts":151,"contactsWithPhone":151,"qualified":6,"agendadas":4,"agendadasBot":3,"sent":1168,"failed":4,"failRate":0.3,"phoneRate":100.0,"avgMsgs":24.6},{"iso":"MX","country":"México","flag":"🇲🇽","dms":69,"iniciadas":21,"continuadas":16,"msgs":425,"sinRespuesta":10,"traspasos":38,"contacts":69,"contactsWithPhone":69,"qualified":1,"agendadas":1,"agendadasBot":1,"sent":287,"failed":3,"failRate":1.0,"phoneRate":100.0,"avgMsgs":20.2},{"iso":"CO","country":"Colombia","flag":"🇨🇴","dms":41,"iniciadas":22,"continuadas":20,"msgs":419,"sinRespuesta":5,"traspasos":14,"contacts":41,"contactsWithPhone":41,"qualified":2,"agendadas":1,"agendadasBot":0,"sent":253,"failed":1,"failRate":0.4,"phoneRate":100.0,"avgMsgs":19.0},{"iso":"CL","country":"Chile","flag":"🇨🇱","dms":31,"iniciadas":15,"continuadas":13,"msgs":325,"sinRespuesta":4,"traspasos":12,"contacts":31,"contactsWithPhone":31,"qualified":1,"agendadas":0,"agendadasBot":0,"sent":192,"failed":1,"failRate":0.5,"phoneRate":100.0,"avgMsgs":21.7},{"iso":"AR","country":"Argentina","flag":"🇦🇷","dms":28,"iniciadas":13,"continuadas":10,"msgs":395,"sinRespuesta":3,"traspasos":12,"contacts":28,"contactsWithPhone":28,"qualified":2,"agendadas":2,"agendadasBot":2,"sent":221,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":30.4},{"iso":"PE","country":"Perú","flag":"🇵🇪","dms":25,"iniciadas":5,"continuadas":5,"msgs":250,"sinRespuesta":2,"traspasos":18,"contacts":25,"contactsWithPhone":25,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":159,"failed":2,"failRate":1.3,"phoneRate":100.0,"avgMsgs":50.0},{"iso":"PR","country":"Puerto Rico","flag":"🇵🇷","dms":23,"iniciadas":3,"continuadas":3,"msgs":75,"sinRespuesta":18,"traspasos":2,"contacts":23,"contactsWithPhone":23,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":55,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":25.0},{"iso":"DO","country":"República Dominicana","flag":"🇩🇴","dms":16,"iniciadas":6,"continuadas":6,"msgs":203,"sinRespuesta":7,"traspasos":3,"contacts":16,"contactsWithPhone":16,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":116,"failed":1,"failRate":0.9,"phoneRate":100.0,"avgMsgs":33.8},{"iso":"ES","country":"España","flag":"🇪🇸","dms":10,"iniciadas":6,"continuadas":5,"msgs":187,"sinRespuesta":1,"traspasos":3,"contacts":10,"contactsWithPhone":10,"qualified":3,"agendadas":0,"agendadasBot":0,"sent":103,"failed":1,"failRate":1.0,"phoneRate":100.0,"avgMsgs":31.2},{"iso":"EC","country":"Ecuador","flag":"🇪🇨","dms":10,"iniciadas":7,"continuadas":7,"msgs":159,"sinRespuesta":1,"traspasos":2,"contacts":10,"contactsWithPhone":10,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":93,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":22.7},{"iso":"PA","country":"Panamá","flag":"🇵🇦","dms":7,"iniciadas":4,"continuadas":4,"msgs":133,"sinRespuesta":0,"traspasos":3,"contacts":7,"contactsWithPhone":7,"qualified":1,"agendadas":0,"agendadasBot":0,"sent":80,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":33.2},{"iso":"BR","country":"Brasil","flag":"🇧🇷","dms":4,"iniciadas":3,"continuadas":2,"msgs":36,"sinRespuesta":0,"traspasos":1,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":24,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":12.0},{"iso":"SV","country":"El Salvador","flag":"🇸🇻","dms":4,"iniciadas":1,"continuadas":1,"msgs":51,"sinRespuesta":0,"traspasos":3,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":29,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":51.0},{"iso":"IT","country":"Italia","flag":"🇮🇹","dms":4,"iniciadas":2,"continuadas":1,"msgs":13,"sinRespuesta":1,"traspasos":1,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":10,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":6.5},{"iso":"BO","country":"Bolivia","flag":"🇧🇴","dms":4,"iniciadas":1,"continuadas":1,"msgs":27,"sinRespuesta":0,"traspasos":3,"contacts":4,"contactsWithPhone":4,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":17,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":27.0},{"iso":"HN","country":"Honduras","flag":"🇭🇳","dms":3,"iniciadas":1,"continuadas":1,"msgs":10,"sinRespuesta":0,"traspasos":2,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":7,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":10.0},{"iso":"CA","country":"Canadá","flag":"🇨🇦","dms":3,"iniciadas":1,"continuadas":1,"msgs":94,"sinRespuesta":1,"traspasos":1,"contacts":3,"contactsWithPhone":3,"qualified":1,"agendadas":1,"agendadasBot":1,"sent":68,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":94.0},{"iso":"CR","country":"Costa Rica","flag":"🇨🇷","dms":3,"iniciadas":1,"continuadas":1,"msgs":14,"sinRespuesta":1,"traspasos":1,"contacts":3,"contactsWithPhone":3,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":9,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":14.0},{"iso":"PT","country":"Portugal","flag":"🇵🇹","dms":2,"iniciadas":2,"continuadas":2,"msgs":39,"sinRespuesta":0,"traspasos":0,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":26,"failed":1,"failRate":3.8,"phoneRate":100.0,"avgMsgs":19.5},{"iso":"NL","country":"Países Bajos","flag":"🇳🇱","dms":2,"iniciadas":0,"continuadas":0,"msgs":2,"sinRespuesta":0,"traspasos":2,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":2,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":0},{"iso":"UY","country":"Uruguay","flag":"🇺🇾","dms":2,"iniciadas":1,"continuadas":1,"msgs":80,"sinRespuesta":0,"traspasos":1,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":50,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":80.0},{"iso":"GT","country":"Guatemala","flag":"🇬🇹","dms":2,"iniciadas":0,"continuadas":0,"msgs":3,"sinRespuesta":1,"traspasos":1,"contacts":2,"contactsWithPhone":2,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":3,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":0},{"iso":"TT","country":"Trinidad y Tobago","flag":"🇹🇹","dms":1,"iniciadas":0,"continuadas":0,"msgs":1,"sinRespuesta":0,"traspasos":1,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":1,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":0},{"iso":"AU","country":"Australia","flag":"🇦🇺","dms":1,"iniciadas":1,"continuadas":0,"msgs":4,"sinRespuesta":0,"traspasos":0,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":3,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":4.0},{"iso":"CU","country":"Cuba","flag":"🇨🇺","dms":1,"iniciadas":0,"continuadas":0,"msgs":1,"sinRespuesta":0,"traspasos":1,"contacts":1,"contactsWithPhone":1,"qualified":0,"agendadas":0,"agendadasBot":0,"sent":1,"failed":0,"failRate":0.0,"phoneRate":100.0,"avgMsgs":0}],"countryCoverage":{"withPhone":636,"total":5468,"pct":11.6},"funnelWindow":{"context_ready":169,"profile_ready":125,"qualified_lead":23,"appointment_sent":81,"appointment_booked":9,"ai_attended":23},"funnelOverlap":{"chain":["context_ready","profile_ready","appointment_sent"],"chainBreaks":{"profile_ready":0,"appointment_sent":0},"sentWithoutQualified":92,"qualifiedWithoutSent":36,"bookedWithoutSent":40,"attendedWithoutBooked":36},"funnelBySource":{"ig_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"lnk_ig_keyword_trigger_higado_260904":{"context_ready":42,"profile_ready":33,"qualified_lead":8,"appointment_sent":10,"appointment_booked":4,"ai_attended":8},"lnk_ig_kwt_tiroides_260908":{"context_ready":2,"profile_ready":2,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1},"fb_organico":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"email_inbound":{"context_ready":2,"profile_ready":2,"qualified_lead":0,"appointment_sent":1,"appointment_booked":0,"ai_attended":0},"wa_inbound":{"context_ready":4,"profile_ready":3,"qualified_lead":3,"appointment_sent":2,"appointment_booked":2,"ai_attended":3},"sin_firma":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_migrana":{"context_ready":110,"profile_ready":78,"qualified_lead":9,"appointment_sent":60,"appointment_booked":3,"ai_attended":9},"tt_bio":{"context_ready":1,"profile_ready":1,"qualified_lead":1,"appointment_sent":1,"appointment_booked":0,"ai_attended":1},"lnk_ig_keyword_trigger_quiero_260904":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_clase":{"context_ready":0,"profile_ready":0,"qualified_lead":0,"appointment_sent":0,"appointment_booked":0,"ai_attended":0},"ig_kw_cambio":{"context_ready":4,"profile_ready":4,"qualified_lead":1,"appointment_sent":4,"appointment_booked":0,"ai_attended":1},"campana_wa":{"context_ready":4,"profile_ready":2,"qualified_lead":0,"appointment_sent":2,"appointment_booked":0,"ai_attended":0}},"contactsInWindow":5468,"links":{"total":19,"derived":4},"campaigns":[{"tag":"campana-rescue-26-ago-int","contacts":612},{"tag":"campana-13-ago","contacts":378},{"tag":"campana-19-ago-int","contacts":1449},{"tag":"campana-19-ago-eeuu","contacts":889},{"tag":"lead capture","contacts":65}],"appointments":{"total":31,"byOrigin":{"conversations_ai":25,"booking_widget":6},"afterConversation":11,"withConversation":11,"contactsWithAppt":11,"taggedBooked":9},"botCalendarEvents":31,"latency":{"firstReply":{"med":4195000.0,"p90":327471000.0,"n":214,"dist":[{"label":"< 1 min","n":16},{"label":"1-5 min","n":30},{"label":"5-30 min","n":43},{"label":"30 min - 2 h","n":34},{"label":"2-12 h","n":22},{"label":"12-24 h","n":20},{"label":"> 24 h","n":49}]},"bot":{"med":50000.0,"p90":2097000.0,"n":7919,"dist":[{"label":"< 1 min","n":4200},{"label":"1-5 min","n":2121},{"label":"5-30 min","n":764},{"label":"30 min - 2 h","n":336},{"label":"2-12 h","n":397},{"label":"12-24 h","n":92},{"label":"> 24 h","n":9}]}},"hours":[{"h":0,"sent":425,"replied":226},{"h":1,"sent":292,"replied":216},{"h":2,"sent":300,"replied":228},{"h":3,"sent":195,"replied":176},{"h":4,"sent":118,"replied":104},{"h":5,"sent":70,"replied":62},{"h":6,"sent":43,"replied":35},{"h":7,"sent":34,"replied":33},{"h":8,"sent":46,"replied":41},{"h":9,"sent":53,"replied":50},{"h":10,"sent":109,"replied":101},{"h":11,"sent":169,"replied":161},{"h":12,"sent":178,"replied":164},{"h":13,"sent":237,"replied":212},{"h":14,"sent":271,"replied":182},{"h":15,"sent":351,"replied":188},{"h":16,"sent":154,"replied":122},{"h":17,"sent":166,"replied":127},{"h":18,"sent":114,"replied":98},{"h":19,"sent":400,"replied":144},{"h":20,"sent":348,"replied":129},{"h":21,"sent":287,"replied":127},{"h":22,"sent":301,"replied":139},{"h":23,"sent":403,"replied":180}],"dow":[{"d":"Lunes","sent":877,"replied":631},{"d":"Martes","sent":1055,"replied":894},{"d":"Miércoles","sent":833,"replied":518},{"d":"Jueves","sent":465,"replied":181},{"d":"Viernes","sent":861,"replied":595},{"d":"Sábado","sent":523,"replied":223},{"d":"Domingo","sent":450,"replied":203}],"touches":[{"n":1,"convs":790},{"n":2,"convs":113},{"n":3,"convs":578},{"n":4,"convs":307},{"n":5,"convs":321},{"n":6,"convs":1136}],"depth":[{"n":1,"convs":5468},{"n":2,"convs":4455},{"n":3,"convs":2802},{"n":4,"convs":2468},{"n":5,"convs":1836},{"n":6,"convs":1569},{"n":7,"convs":1307},{"n":8,"convs":1093},{"n":9,"convs":978},{"n":10,"convs":880},{"n":11,"convs":810},{"n":12,"convs":762},{"n":13,"convs":723},{"n":14,"convs":681},{"n":15,"convs":652},{"n":16,"convs":610},{"n":17,"convs":576},{"n":18,"convs":537},{"n":19,"convs":511},{"n":20,"convs":483}],"failedMessages":128};
+
+const $ = s => document.querySelector(s);
+const fmt = n => String(Math.round(n ?? 0)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const pc = n => (n ?? 0).toFixed(1).replace('.', ',') + ' %';
+const CH_COLOR = {
+  INSTAGRAM: 'var(--s5)', WHATSAPP: 'var(--s3)', FACEBOOK: 'var(--s1)',
+  EMAIL: 'var(--s4)', CALL: 'var(--s7)', NO_SHOW: 'var(--s2)', SMS: 'var(--s6)'
+};
+const chColor = c => CH_COLOR[c] || 'var(--muted)';
+const chName = c => ({
+  NO_SHOW: 'SMS no-show', CAMPAIGN_EMAIL: 'Email campaña',
+  LIVE_CHAT_INFO_MESSAGE: 'Chat web', LIVE_CHAT: 'Chat web', GMB: 'Google Business'
+})[c] || c.charAt(0) + c.slice(1).toLowerCase();
+
+// ---------- tooltips ----------
+// Un solo nodo flotante para toda la página. Cada elemento que quiera tooltip
+// lleva data-tip con el HTML ya montado; así el coste por barra es un atributo.
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// pcOf vive aca, a nivel de modulo, porque el intro y los bloques que
+// siguen (embudo, fuentes) comparten el mismo calculo de porcentaje.
+const pcOf = (a, b) => b ? Math.round(a * 1000 / b) / 10 : 0;
+
+// Totales del embudo. Se calculan una vez y los usan los tres bloques, para
+// que ninguno pueda contradecir a otro: ese fue el defecto de la version
+// anterior, con cinco cifras distintas de "agendadas" en la misma pagina.
+const TOT = DATA.sources.reduce((a, s) => ({
+  dms: a.dms + s.dms,
+  iniciadas: a.iniciadas + s.iniciadas,
+  continuadas: a.continuadas + s.continuadas,
+  agendadas: a.agendadas + s.agendadas,
+  agendadasBot: a.agendadasBot + s.agendadasBot,
+}), { dms: 0, iniciadas: 0, continuadas: 0, agendadas: 0, agendadasBot: 0 });
+
+const FUNNEL_STEPS = [
+  { k: 'dms', l: "DM's", base: null },
+  { k: 'iniciadas', l: 'Conv. iniciadas', base: 'dms' },
+  { k: 'continuadas', l: 'Conv. continuadas', base: 'iniciadas' },
+  { k: 'agendadas', l: 'Agendadas', base: 'continuadas' },
+];
+
+function renderIntro() {
+  $('#intro-kpis').innerHTML = [
+    ['Todos los canales · Conversaciones', fmt(TOT.dms), 'DM abiertos en la ventana'],
+    ['Conversaciones continuadas', pc(pcOf(TOT.continuadas, TOT.iniciadas)),
+     `${fmt(TOT.continuadas)} de ${fmt(TOT.iniciadas)} iniciadas`],
+    ['Agendas Bot + Human', pc(pcOf(TOT.agendadas, TOT.continuadas)),
+     `${fmt(TOT.agendadas)} citas atribuibles`],
+    ['Agendas Bot', pc(pcOf(TOT.agendadasBot, TOT.agendadas)),
+     `${fmt(TOT.agendadasBot)} las cerro el bot solo`],
+  ].map(([l, v, s]) => `<div class="kpi"><div class="k">${l}</div>
+      <div class="v">${v}</div><div class="d">${s}</div></div>`).join('');
+
+  const max = TOT.dms || 1;
+  $('#intro-funnel').innerHTML = FUNNEL_STEPS.map(st => {
+    const v = TOT[st.k];
+    const drop = st.base ? TOT[st.base] - v : 0;
+    return `<div class="fstep">
+      <div class="fstep-l">${st.l}</div>
+      <div class="fstep-bar"><span style="width:${v / max * 100}%"></span></div>
+      <div class="fstep-v">${fmt(v)}${st.base
+        ? ` <span class="dim">−${fmt(drop)}</span>` : ''}</div>
+    </div>`;
+  }).join('');
+
+  // Las dos causas de la primera caida, separadas. Juntas se leian como un
+  // solo fracaso, y son cosas opuestas: una es outreach que no prendio, la
+  // otra es un lead que si respondio y se fue a WhatsApp.
+  const sinResp = DATA.sources.reduce((a, s) => a + s.sinRespuesta, 0);
+  const traspasos = DATA.sources.reduce((a, s) => a + s.traspasos, 0);
+  $('#intro-note').innerHTML =
+    `De los ${fmt(TOT.dms)} DM abiertos, <strong>${fmt(sinResp)}</strong> no `
+    + `recibieron ninguna respuesta del lead, y <strong>${fmt(traspasos)}</strong> `
+    + `terminaron con un enlace que llevó la conversación a WhatsApp, donde `
+    + `continúa como un contacto nuevo. Ninguno de los dos es ruido técnico.`;
+}
+renderIntro();
+
+// ---------- fuentes: tabla con filtro de fecha ----------
+// Un color por fuente, estable entre recargas: el indice manda, no un hash,
+// para que cada fuente conserve su color aunque el filtro reordene las filas.
+const SRC_COLORS = ['#4f7cff','#e8833a','#3aa76d','#c2477f','#8a5cf6',
+                    '#d9a520','#2aa8b8','#e05252','#6b7280','#7c9a3a',
+                    '#b4529e','#3f7f9e','#a06a3a'];
+const srcColor = {};
+DATA.sources.forEach((s, i) => { srcColor[s.key] = SRC_COLORS[i % SRC_COLORS.length]; });
+
+const ADDITIVE = ['dms','iniciadas','continuadas','msgs','sinRespuesta','traspasos'];
+const UNIQUE = ['contacts','contactsWithPhone','qualified','agendadas','agendadasBot'];
+
+// Re-agrega una fuente al rango pedido. Los contadores de contacto unico se
+// suman por dia, asi que un contacto activo dos dias cuenta dos veces: el
+// filtro sobreestima ligeramente y la nota al pie lo dice.
+//
+// Si el rango pedido cubre la ventana completa, se devuelve `s` tal cual en
+// vez de sumar los dias: no es una optimizacion, es para que la misma
+// pregunta (que tan bien conviertio cada fuente) nunca tenga dos respuestas
+// distintas en la misma pantalla segun se use el filtro o no.
+function srcInRange(s, from, to) {
+  const coversWindow = (!from || from <= DATA.window.from)
+    && (!to || to >= DATA.window.to);
+  if (coversWindow) return s;
+  const out = { key: s.key, label: s.label, signed: s.signed };
+  ADDITIVE.concat(UNIQUE).forEach(f => { out[f] = 0; });
+  s.byDay.forEach(d => {
+    if (from && d.day < from) return;
+    if (to && d.day > to) return;
+    ADDITIVE.concat(UNIQUE).forEach(f => { out[f] += d[f]; });
+  });
+  return out;
+}
+
+// Una celda se rinde como "—" cuando la metrica no es medible en esa fuente y
+// ademas vale 0. El bot califica por tags que exigen telefono, y el DM de
+// Instagram no lo trae: un 0% ahi afirmaria un fracaso que no ocurrio.
+function cell(value, rate, phoneRate) {
+  if (phoneRate < 10 && !value) return '<td class="n dim">—</td>';
+  return `<td class="n" data-sort="${value}">${fmt(value)} `
+       + `<span class="dim">${pc(rate)}</span></td>`;
+}
+
+// Fuentes apagadas por el lector. Apagar en vez de filtrar de entrada es lo
+// que permite lo interesante: quitar IG Organico y ver el resto a su escala,
+// que con 4.257 DM al lado quedaba aplastado contra el eje.
+const srcOff = new Set();
+
+function renderChips() {
+  const grupos = [...new Set(DATA.sources.map(s => s.group))];
+  const nOff = srcOff.size;
+  $('#src-chips').innerHTML =
+    `<button type="button" class="chip all" data-all="1">${
+      nOff ? `Ver todas (${nOff} ocultas)` : `${DATA.sources.length} fuentes`}</button>`
+    + grupos.map(g => {
+        const keys = DATA.sources.filter(s => s.group === g).map(s => s.key);
+        const on = keys.some(k => !srcOff.has(k));
+        return `<button type="button" class="chip" data-group="${esc(g)}"
+                  aria-pressed="${on}">${esc(g)}</button>`;
+      }).join('')
+    + DATA.sources.map(s =>
+        `<button type="button" class="chip" data-key="${esc(s.key)}"
+           aria-pressed="${!srcOff.has(s.key)}"
+           ><i style="background:${srcColor[s.key]}"></i>${esc(s.label)}</button>`).join('');
+}
+
+$('#src-chips').addEventListener('click', e => {
+  const b = e.target.closest('.chip');
+  if (!b) return;
+  if (b.dataset.all) srcOff.clear();
+  else if (b.dataset.group) {
+    const keys = DATA.sources.filter(s => s.group === b.dataset.group).map(s => s.key);
+    const apagando = keys.some(k => !srcOff.has(k));
+    keys.forEach(k => apagando ? srcOff.add(k) : srcOff.delete(k));
+  } else {
+    const k = b.dataset.key;
+    srcOff.has(k) ? srcOff.delete(k) : srcOff.add(k);
+  }
+  renderSources();
+});
+
+function renderSources() {
+  const from = $('#src-from').value, to = $('#src-to').value;
+  // Misma condicion que usa srcInRange: si el rango cubre toda la ventana,
+  // no hay suma por dia y por tanto no hay sobreestimacion que advertir.
+  const isPartial = (from && from > DATA.window.from) || (to && to < DATA.window.to);
+  const rows = DATA.sources.map(s => srcInRange(s, from, to))
+    .filter(s => s.dms > 0 && !srcOff.has(s.key))
+    .sort((a, b) => b.dms - a.dms);
+  renderChips();
+
+  const t = rows.reduce((a, s) => {
+    ADDITIVE.concat(UNIQUE).forEach(f => { a[f] = (a[f] || 0) + s[f]; });
+    return a;
+  }, {});
+
+  const body = rows.map(s => {
+    const phoneRate = pcOf(s.contactsWithPhone, s.contacts);
+    const avg = s.iniciadas ? Math.round(s.msgs / s.iniciadas * 10) / 10 : 0;
+    return `<tr>
+      <td><span class="swatch" style="background:${srcColor[s.key]}"></span>${s.label}</td>
+      <td class="n" data-sort="${s.dms}">${fmt(s.dms)}</td>
+      <td class="n" data-sort="${s.iniciadas}">${fmt(s.iniciadas)} <span class="dim">${pc(pcOf(s.iniciadas, s.dms))}</span></td>
+      <td class="n" data-sort="${s.continuadas}">${fmt(s.continuadas)} <span class="dim">${pc(pcOf(s.continuadas, s.iniciadas))}</span></td>
+      <td class="n" data-sort="${avg}">${String(avg).replace('.', ',')}</td>
+      ${cell(s.qualified, pcOf(s.qualified, s.contacts), phoneRate)}
+      ${cell(s.agendadas, pcOf(s.agendadas, s.contacts), phoneRate)}
+    </tr>`;
+  }).join('');
+
+  const avgT = t.iniciadas ? Math.round(t.msgs / t.iniciadas * 10) / 10 : 0;
+  $('#src-tbl').innerHTML = `<thead><tr>
+      <th>Fuente</th><th class="r">DM's</th><th class="r">Conv. iniciadas</th>
+      <th class="r">Conv. continuadas</th><th class="r">Msj/Conv</th>
+      <th class="r">Calificadas</th><th class="r">Agendadas</th>
+    </tr></thead><tbody>${body}
+    <tr class="tot"><td>${srcOff.size ? 'Total visible' : 'Total'}</td>
+      <td class="n">${fmt(t.dms)}</td>
+      <td class="n">${fmt(t.iniciadas)} <span class="dim">${pc(pcOf(t.iniciadas, t.dms))}</span></td>
+      <td class="n">${fmt(t.continuadas)} <span class="dim">${pc(pcOf(t.continuadas, t.iniciadas))}</span></td>
+      <td class="n">${String(avgT).replace('.', ',')}</td>
+      <td class="n">${fmt(t.qualified)}</td>
+      <td class="n">${fmt(t.agendadas)}</td>
+    </tr></tbody>`;
+  sortable($('#src-tbl'));
+
+  // El aviso de fuentes ocultas va primero: si el total no es el total, eso es
+  // lo que el lector tiene que saber antes que nada.
+  const ocultas = DATA.sources.filter(s => srcOff.has(s.key));
+  $('#src-foot').innerHTML =
+    (ocultas.length
+      ? `<strong>El total no incluye ${ocultas.length} fuente${ocultas.length > 1 ? 's' : ''} `
+        + `oculta${ocultas.length > 1 ? 's' : ''}</strong> (${
+          ocultas.map(s => esc(s.label)).join(', ')}). `
+      : '')
+    + 'Los tags del bot exigen teléfono y el DM de Instagram no lo trae: esos leads '
+    + 'se califican como contacto nuevo al cruzar a WhatsApp, así que su fila marca '
+    + '<strong>—</strong>, no 0%. '
+    + (isPartial
+       ? 'Con el filtro activo, un contacto activo en varios días cuenta en cada uno: '
+       + 'Calificadas y Agendadas quedan ligeramente sobreestimadas.'
+       : '');
+}
+
+$('#src-from').addEventListener('change', renderSources);
+$('#src-to').addEventListener('change', renderSources);
+$('#src-reset').addEventListener('click', () => {
+  $('#src-from').value = ''; $('#src-to').value = ''; renderSources();
+});
+$('#src-from').min = $('#src-to').min = DATA.window.from;
+$('#src-from').max = $('#src-to').max = DATA.window.to;
+renderSources();
+
+function tipHTML(head, pairs, note) {
+  const dl = pairs && pairs.length
+    ? '<dl>' + pairs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('') + '</dl>' : '';
+  return `<div class="tip-h">${esc(head)}</div>${dl}` +
+    (note ? `<p class="tip-n">${esc(note)}</p>` : '');
+}
+
+let tipEl;
+function initTips() {
+  tipEl = document.createElement('div');
+  tipEl.id = 'tip';
+  tipEl.setAttribute('role', 'tooltip');
+  document.body.appendChild(tipEl);
+
+  let current = null;
+  document.addEventListener('mousemove', e => {
+    const t = e.target.closest('[data-tip]');
+    if (t !== current) {
+      current = t;
+      if (t) { tipEl.innerHTML = t.dataset.tip; tipEl.classList.add('on'); }
+      else tipEl.classList.remove('on');
+    }
+    if (!t) return;
+    // Se coloca al lado del cursor y se voltea si no cabe.
+    const pad = 14, r = tipEl.getBoundingClientRect();
+    let x = e.clientX + pad, y = e.clientY + pad;
+    if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad;
+    if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad;
+    tipEl.style.left = Math.max(8, x) + 'px';
+    tipEl.style.top = Math.max(8, y) + 'px';
+  });
+  document.addEventListener('mouseleave', () => tipEl.classList.remove('on'));
+  addEventListener('scroll', () => { tipEl.classList.remove('on'); current = null; }, { passive: true });
+}
+
+// ---------- tablas ordenables ----------
+// El valor de orden sale de data-sort si existe; si no, del texto de la celda,
+// interpretando el formato español (1.234,5 %) como número.
+function numOf(td) {
+  if (td.dataset.sort !== undefined) return parseFloat(td.dataset.sort);
+  const raw = td.textContent.trim();
+  const n = parseFloat(raw.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, ''));
+  return isNaN(n) ? null : n;
+}
+
+// ---------- podar tablas largas ----------
+// Una tabla de 41 filas donde 19 no llegan al umbral de significancia no informa,
+// entierra. Se muestran las que dicen algo y el resto queda a un clic.
+function prune(table, keep, etiqueta) {
+  const tbody = table.tBodies[0];
+  if (!tbody) return;
+  const filas = [...tbody.rows].filter(r => !r.classList.contains('tot'));
+  if (filas.length <= keep + 2) return;   // por dos filas no merece la pena
+  filas.slice(keep).forEach(r => r.classList.add('beyond'));
+  const n = filas.length - keep;
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'more-btn';
+  btn.textContent = `Ver ${n} ${etiqueta} más`;
+  btn.addEventListener('click', () => {
+    const abierto = table.classList.toggle('show-all');
+    btn.textContent = abierto ? 'Ver menos' : `Ver ${n} ${etiqueta} más`;
+  });
+  table.parentElement.insertAdjacentElement('afterend', btn);
+}
+
+function sortable(table, opt = {}) {
+  const thead = table.tHead, tbody = table.tBodies[0];
+  if (!thead || !tbody) return;
+  const ths = [...thead.rows[0].cells];
+  ths.forEach((th, i) => {
+    if (opt.skip && opt.skip.includes(i)) return;
+    th.classList.add('sortable');
+    th.tabIndex = 0;
+    const go = () => {
+      const desc = !th.classList.contains('desc');
+      ths.forEach(x => x.classList.remove('asc', 'desc'));
+      th.classList.add(desc ? 'desc' : 'asc');
+      // Ordenar deshace el agrupado: una tabla ordenada no tiene grupos.
+      // Las filas de total tampoco tienen sentido en medio, así que salen al final.
+      [...tbody.querySelectorAll('tr.grp')].forEach(r => r.remove());
+      const tot = [...tbody.querySelectorAll('tr.tot')];
+      tot.forEach(r => r.remove());
+      const rows = [...tbody.rows];
+      rows.sort((a, b) => {
+        const x = numOf(a.cells[i]), y = numOf(b.cells[i]);
+        if (x === null || y === null) {
+          const c = a.cells[i].textContent.localeCompare(b.cells[i].textContent, 'es');
+          return desc ? -c : c;
+        }
+        return desc ? y - x : x - y;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      tot.forEach(r => tbody.appendChild(r));
+    };
+    th.addEventListener('click', go);
+    th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+  });
+  // sortable() se llama en cada render (la tabla se reconstruye entera para
+  // reordenar), así que el aviso solo se agrega si todavía no existe: si no,
+  // cada filtro de fecha sumaba un párrafo más debajo de la tabla.
+  const next = table.parentElement.nextElementSibling;
+  if (!next || !next.classList.contains('sort-hint')) {
+    const hint = document.createElement('p');
+    hint.className = 'sort-hint';
+    hint.textContent = 'Clic en cualquier encabezado para ordenar.';
+    table.parentElement.insertAdjacentElement('afterend', hint);
+  }
+}
+
+function bars(el, items, opt = {}) {
+  const max = Math.max(1, ...items.map(i => i.v));
+  el.innerHTML = items.map(i => `
+    <div class="row"${i.tip ? ` data-tip="${esc(i.tip)}"` : ''}>
+      <span class="lbl" title="${i.l}">${i.l}</span>
+      <span class="track"><span class="fill" style="width:${(i.v / max * 100).toFixed(1)}%;background:${i.c || 'var(--accent)'}"></span></span>
+      <span class="val">${i.t ?? fmt(i.v)}</span>
+    </div>`).join('');
+  if (opt.empty && !items.length) el.innerHTML = `<p class="note">${opt.empty}</p>`;
+}
+
+function render() {
+  const d = DATA, C = d.conversations;
+
+  // ---------- encabezado ----------
+  $('#hdr-window').textContent = `${d.window.from} → ${d.window.to} · ${d.window.days} días`;
+  const g = new Date(d.generatedAt);
+  $('#hdr-gen').textContent = 'Generado ' + g.toLocaleString('es', { dateStyle: 'medium', timeStyle: 'short' });
+  // ---------- KPIs ----------
+  // La continuidad por umbral de mensajes (>=4, >=6, >=20) ya no llega en los
+  // datos: la fuente ahora solo distingue iniciada/continuada. El denominador
+  // pasa de DM's abiertos a conversaciones iniciadas, que es el paso real
+  // donde empieza a contar la conversación.
+  // 'Abiertas' usa TOT.dms, no C.total: son dos formas distintas de contar
+  // conversaciones (TOT solo cuenta las que tienen mensajes) y el intro de
+  // arriba ya fijó TOT como la única fuente de esa cifra. 'Respondieron' se
+  // quitó por la misma razón: era el mismo hecho (el lead escribió al menos
+  // una vez) que la tarjeta 'Iniciadas', pero salido de C y con otro numero.
+  $('#conv-kpis').innerHTML = [
+    { k: 'Abiertas', v: fmt(TOT.dms), d: `${(TOT.dms / d.window.days).toFixed(0)} por día`, hi: 1 },
+    { k: 'Iniciadas', v: pc(pcOf(TOT.iniciadas, TOT.dms)), d: `${fmt(TOT.iniciadas)} conversaciones` },
+    { k: 'Continuadas', v: pc(pcOf(TOT.continuadas, TOT.iniciadas)), d: `${fmt(TOT.continuadas)} de las iniciadas` },
+    { k: 'Mensajes por conv.', v: String(C.avgMsgs).replace('.', ','), d: 'promedio' }
+  ].map(x => `<div class="kpi${x.hi ? ' hi' : ''}"><div class="k">${x.k}</div><div class="v">${x.v}</div><div class="d">${x.d}</div></div>`).join('');
+
+  // La lede no repite el volumen ni la tasa de respuesta: eso ya lo dicen las
+  // tarjetas del intro con TOT. Su trabajo es presentar lo que sigue en la
+  // sección — por dónde entraron y hasta dónde llegaron — sin volver a
+  // anunciar una cifra que el lector ya vio arriba.
+  $('#conv-lede').innerHTML = `Así entraron las conversaciones canal por canal a lo largo de
+    ${d.window.days} días, y cuántas de las que arrancaron siguieron de verdad.`;
+
+  // ---------- timeline ----------
+  // NO_SHOW y CALL no son canales de entrada: son tipos de mensaje que GHL
+  // mezcla en el mismo campo. En un bloque que habla de por donde entra la
+  // gente, sobran.
+  const CHAN_HIDDEN = new Set(['NO_SHOW', 'CALL']);
+  const CHANNELS = C.byChannel.filter(c => !CHAN_HIDDEN.has(c.channel));
+  const days = C.byDay.map(x => ({
+    ...x,
+    chan: Object.fromEntries(Object.entries(x.chan).filter(([c]) => !CHAN_HIDDEN.has(c)))
+  }));
+  const chans = CHANNELS.map(c => c.channel).slice(0, 6);
+  const maxDay = Math.max(1, ...days.map(x => x.n));
+  const avgDay = days.reduce((a, x) => a + x.n, 0) / Math.max(1, days.length);
+  $('#tl').innerHTML = days.map(x => {
+    const segs = chans.filter(c => x.chan[c]).map(c =>
+      `<span class="seg" style="height:${(x.chan[c] / maxDay * 172).toFixed(1)}px;background:${chColor(c)}"></span>`).join('');
+    // El desglose por canal del día, que antes había que adivinar mirando colores.
+    const pairs = Object.entries(x.chan).sort((a, b) => b[1] - a[1])
+      .map(([c, n]) => [chName(c), `${fmt(n)} <span class="dim">${pc(n / x.n * 100)}</span>`]);
+    const dif = x.n - avgDay;
+    const nota = `${dif >= 0 ? '+' : '−'}${fmt(Math.abs(dif))} respecto a la media de ${fmt(avgDay)}/día`;
+    const tip = tipHTML(x.day, [['Total', `<strong>${fmt(x.n)}</strong>`], ...pairs], nota);
+    return `<div class="col" data-tip="${esc(tip)}">${segs}</div>`;
+  }).join('');
+  $('#tl-axis').innerHTML = days.map((x, i) =>
+    `<span>${(days.length <= 10 || i % 2 === 0) ? x.day.slice(5) : ''}</span>`).join('');
+  $('#tl-legend').innerHTML = chans.map(c =>
+    `<span><i style="background:${chColor(c)}"></i>${chName(c)}</span>`).join('');
+
+  // ---------- canales ----------
+  // Denominador: la suma de los canales que de verdad aparecen en la lista,
+  // no C.total. C.total (6.079) incluye NO_SHOW y CALL, que este bloque ya
+  // filtró de las filas; dividir por él dejaba las barras sumando 98,5 % de
+  // una cifra que no se ve en ninguna parte de la pantalla. Tampoco se usa
+  // TOT.dms (la cifra de la tarjeta "Abiertas"): esa cuenta *conversaciones
+  // con mensajes*, un corte distinto al de canal de entrada. Sumar solo los
+  // canales listados es la única cuenta que hace que estas barras sumen 100 %
+  // de lo que el lector tiene enfrente.
+  const CHANNELS_TOTAL = CHANNELS.reduce((a, c) => a + c.n, 0);
+  // Cuántos días de la ventana aparece el canal: distingue el goteo constante
+  // del pico de un solo día, que en la barra se ven igual.
+  bars($('#chan-rows'), CHANNELS.map(c => {
+    const dias = days.filter(x => x.chan[c.channel]).length;
+    const pico = days.reduce((m, x) => Math.max(m, x.chan[c.channel] || 0), 0);
+    return {
+      l: chName(c.channel), v: c.n, c: chColor(c.channel),
+      t: `${fmt(c.n)}  ${pc(c.n / CHANNELS_TOTAL * 100)}`,
+      tip: tipHTML(chName(c.channel), [
+        ['Conversaciones', fmt(c.n)],
+        ['De los canales listados', pc(c.n / CHANNELS_TOTAL * 100)],
+        ['Media por día', fmt(c.n / Math.max(1, days.length))],
+        ['Día más alto', fmt(pico)],
+        ['Días con actividad', `${dias} de ${days.length}`],
+      ])
+    };
+  }));
+
+  // ---------- continuidad ----------
+  // La cadena entera, no solo el tramo final. Antes empezaba en "iniciadas" y
+  // el lector no podia saber por que ese numero no era el de conversaciones
+  // abiertas del grafico de al lado: las dos causas de la caida quedaban fuera
+  // del dibujo.
+  const sinResp = d.sources.reduce((a, s) => a + s.sinRespuesta, 0);
+  const traspasos = d.sources.reduce((a, s) => a + s.traspasos, 0);
+  bars($('#cont-rows'), [
+    {
+      l: "DM's abiertos", v: TOT.dms, c: 'var(--s1)',
+      t: fmt(TOT.dms),
+      tip: tipHTML("DM's abiertos", [
+        ['Conversaciones', fmt(TOT.dms)],
+        ['Por día', fmt(TOT.dms / Math.max(1, d.window.days))],
+      ], 'Todo lo que se abrió en la ventana, por cualquier canal.')
+    },
+    {
+      l: '— nadie contestó', v: sinResp, c: 'var(--s2)',
+      t: `${fmt(sinResp)}  ${pc(pcOf(sinResp, TOT.dms))}`,
+      tip: tipHTML('Nadie contestó', [
+        ['Conversaciones', fmt(sinResp)],
+        ["De los DM's", pc(pcOf(sinResp, TOT.dms))],
+      ], 'Mensajes nuestros que el lead nunca respondió. No es un fallo técnico: es outreach que no prendió.')
+    },
+    {
+      l: '— se fue a WhatsApp', v: traspasos, c: 'var(--s4)',
+      t: `${fmt(traspasos)}  ${pc(pcOf(traspasos, TOT.dms))}`,
+      tip: tipHTML('Traspasos a WhatsApp', [
+        ['Conversaciones', fmt(traspasos)],
+        ["De los DM's", pc(pcOf(traspasos, TOT.dms))],
+      ], 'El bot entregó un enlace y la conversación siguió en WhatsApp, donde GHL abre un contacto nuevo. Se cuenta allí, no aquí.')
+    },
+    {
+      l: '= Conv. iniciadas', v: TOT.iniciadas, c: 'var(--s3)',
+      t: `${fmt(TOT.iniciadas)}  ${pc(pcOf(TOT.iniciadas, TOT.dms))}`,
+      tip: tipHTML('Conversaciones iniciadas', [
+        ['Conversaciones', fmt(TOT.iniciadas)],
+        ["Del total de DM's", pc(pcOf(TOT.iniciadas, TOT.dms))],
+      ], 'El lead escribió al menos una vez y la conversación se quedó en este canal.')
+    },
+    {
+      l: 'Conv. continuadas', v: TOT.continuadas, c: 'var(--s5)',
+      t: `${fmt(TOT.continuadas)}  ${pc(pcOf(TOT.continuadas, TOT.iniciadas))}`,
+      tip: tipHTML('Conversaciones continuadas', [
+        ['Conversaciones', fmt(TOT.continuadas)],
+        ['De las iniciadas', pc(pcOf(TOT.continuadas, TOT.iniciadas))],
+        ['Se caen aquí', fmt(TOT.iniciadas - TOT.continuadas)],
+      ], 'El lead escribió más de una vez: la conversación siguió de verdad.')
+    },
+  ]);
+
+  // ---------- países ----------
+  const CT = d.countries || [], cov = d.countryCoverage || { withPhone: 0, total: 0, pct: 0 };
+  const MIN_CTRY = 20;
+  $('#ctry-lede').innerHTML = `El país sale del prefijo del teléfono, así que solo se puede calcular
+    sobre las <strong>${fmt(cov.withPhone)}</strong> conversaciones que traen número
+    (${pc(cov.pct)} del total). WhatsApp y email lo traen casi siempre; Instagram y Facebook,
+    casi nunca — así que esta sección describe el tráfico telefónico, no el del reporte entero.`;
+
+  // Un país se lee de tres maneras y ninguna manda sobre las otras: volumen,
+  // quién arranca conversación y quién quema envíos.
+  const ctryTip = c => tipHTML(`${c.flag} ${c.country}`, [
+    ["DM's", fmt(c.dms)],
+    ['Conv. iniciadas', `${fmt(c.iniciadas)} · ${pc(pcOf(c.iniciadas, c.dms))}`],
+    ['Conv. continuadas', `${fmt(c.continuadas)} · ${pc(pcOf(c.continuadas, c.iniciadas))}`],
+    ['Mensajes por conversación', String(c.avgMsgs).replace('.', ',')],
+    ['Calificadas', fmt(c.qualified)],
+    ['Agendadas', `${fmt(c.agendadas)} · bot ${fmt(c.agendadasBot)}`],
+    ['Envíos que no llegaron', `${fmt(c.failed)}/${fmt(c.sent)} · ${pc(c.failRate)}`],
+  ], c.dms < MIN_CTRY ? `Menos de ${MIN_CTRY} DM's: el porcentaje es ruido.` : null);
+
+  // Antes eran tres vistas en un selector y no se podían comparar entre sí. Una
+  // sola gráfica con tres barras por país deja ver de un golpe que el volumen y
+  // la calidad de la respuesta no coinciden. Volumen es una cuenta absoluta y
+  // las otras dos son porcentajes: normalizar todo contra el mismo máximo
+  // haría que un país grande pareciera "responder mejor" sin serlo, así que
+  // volumen se normaliza contra el mayor volumen y los porcentajes contra 100,
+  // y cada barra lleva su valor real impreso para que no se confundan a ojo.
+  const CTRY_METRICS = [
+    { l: 'Volumen', c: '#4f7cff', pct: false, get: c => c.dms, txt: c => fmt(c.dms) },
+    { l: '% inicia', c: '#3aa76d', pct: true, get: c => pcOf(c.iniciadas, c.dms), txt: c => pc(pcOf(c.iniciadas, c.dms)) },
+    { l: '% falla', c: '#e05252', pct: true, get: c => c.failRate, txt: c => pc(c.failRate) },
+  ];
+
+  function renderCountryChart() {
+    // El top 12 se elige por volumen, pero volumen no es lo mismo que evidencia:
+    // un país con 3 DM's puede colarse ahí y su "% inicia" o "% falla" saldría
+    // como una barra al 100% tan gruesa como la de un país con miles de envíos.
+    // La tabla y el tooltip ya avisan que ese porcentaje es ruido por debajo de
+    // MIN_CTRY; la gráfica es lo primero que se ve del bloque, así que aplica el
+    // mismo umbral en vez de dejar que el lector confunda "poca muestra" con
+    // "señal fuerte" solo porque la barra llega al borde.
+    const top12 = CT.slice().sort((a, b) => b.dms - a.dms).slice(0, 12);
+    const list = top12.filter(c => c.dms >= MIN_CTRY);
+    const excluded = top12.length - list.length;
+    const maxV = Math.max(1, ...list.map(c => c.dms));
+    $('#ctry-chart').innerHTML = list.map(c => `
+      <div class="cgroup" data-tip="${esc(ctryTip(c))}">
+        <div class="cgroup-l">${c.flag} ${c.country}</div>
+        <div class="cgroup-bars">
+          ${CTRY_METRICS.map(m => {
+            const raw = m.get(c);
+            const w = m.pct ? raw : (raw / maxV * 100);
+            return `<div class="cbar" title="${m.l}">
+              <span style="width:${Math.max(0, Math.min(100, w))}%;background:${m.c}"></span>
+              <em>${m.txt(c)}</em></div>`;
+          }).join('')}
+        </div>
+      </div>`).join('');
+    $('#ctry-legend').innerHTML = CTRY_METRICS.map(m =>
+      `<span><i style="background:${m.c}"></i>${m.l}</span>`).join('');
+    $('#ctry-chart-note').textContent = excluded ?
+      `${excluded} de los ${top12.length} países con más volumen quedaron fuera de esta gráfica por
+      tener menos de ${MIN_CTRY} DM's: con tan pocos envíos, "% inicia" y "% falla" son ruido, no
+      señal. Siguen en la tabla de abajo.` : '';
+  }
+  renderCountryChart();
+
+  $('#ctry-tbl').innerHTML = `<thead><tr>
+      <th>País</th><th class="r">DM's</th><th class="r">Conv. iniciadas</th>
+      <th class="r">Conv. continuadas</th><th class="r">Msj/Conv</th>
+      <th class="r">Calificadas</th><th class="r">Agendadas</th><th class="r">Envíos fallidos</th>
+    </tr></thead><tbody>` + CT.map(c => {
+      const f = c.failRate >= 20 ? 'crit' : (c.failRate >= 8 ? 'warn' : 'ok');
+      return `<tr data-tip="${esc(ctryTip(c))}">
+        <td><span class="mono dim">${c.iso}</span> ${c.flag} ${c.country}</td>
+        <td class="n" data-sort="${c.dms}">${fmt(c.dms)}</td>
+        <td class="n" data-sort="${c.iniciadas}">${fmt(c.iniciadas)} <span class="dim">${pc(pcOf(c.iniciadas, c.dms))}</span></td>
+        <td class="n" data-sort="${c.continuadas}">${fmt(c.continuadas)} <span class="dim">${pc(pcOf(c.continuadas, c.iniciadas))}</span></td>
+        <td class="n" data-sort="${c.avgMsgs}">${String(c.avgMsgs).replace('.', ',')}</td>
+        ${cell(c.qualified, pcOf(c.qualified, c.contacts), c.phoneRate)}
+        ${cell(c.agendadas, pcOf(c.agendadas, c.contacts), c.phoneRate)}
+        <td class="n" data-sort="${c.failRate}">${fmt(c.failed)}/${fmt(c.sent)} <span class="tag ${f}">${pc(c.failRate)}</span></td>
+      </tr>`;
+    }).join('') + (() => {
+      const t = CT.reduce((a, c) => {
+        ['dms', 'iniciadas', 'continuadas', 'msgs', 'qualified', 'agendadas', 'sent', 'failed'].forEach(
+          f => { a[f] = (a[f] || 0) + (c[f] || 0); });
+        return a;
+      }, {});
+      const avgT = t.iniciadas ? Math.round(t.msgs / t.iniciadas * 10) / 10 : 0;
+      return `<tr class="tot"><td>Total</td>
+        <td class="n">${fmt(t.dms)}</td>
+        <td class="n">${fmt(t.iniciadas)} <span class="dim">${pc(pcOf(t.iniciadas, t.dms))}</span></td>
+        <td class="n">${fmt(t.continuadas)} <span class="dim">${pc(pcOf(t.continuadas, t.iniciadas))}</span></td>
+        <td class="n">${String(avgT).replace('.', ',')}</td>
+        <td class="n">${fmt(t.qualified)}</td>
+        <td class="n">${fmt(t.agendadas)}</td>
+        <td class="n">${fmt(t.failed)}/${fmt(t.sent)} <span class="dim">${pc(pcOf(t.failed, t.sent))}</span></td>
+      </tr>`;
+    })() + `</tbody>`;
+  sortable($('#ctry-tbl'));
+  // Por debajo del umbral el porcentaje es ruido, así que esas filas no
+  // encabezan la tabla: quedan a un clic.
+  prune($('#ctry-tbl'), CT.filter(c => c.dms >= MIN_CTRY).length || 12, 'países');
+
+  // Números que rebotan degradan la reputación del remitente, así que el costo
+  // no se queda en el país que falla.
+  const bad = CT.filter(c => c.sent >= 20 && c.failRate >= 20).sort((a, b) => b.failRate - a.failRate);
+  $('#ctry-callout').innerHTML = bad.length ? `<div class="callout crit">
+    <h4>Entregabilidad por país</h4>
+    <p>${bad.slice(0, 6).map(c => `<strong>${c.country}</strong> falla el ${pc(c.failRate)}
+      de sus ${fmt(c.sent)} envíos`).join(' · ')}.</p>
+    <p>Un número que rebota así no solo pierde ese lead: degrada la reputación del remitente,
+    con lo que el costo se reparte sobre todos los demás países.</p></div>` : '';
+
+  // ---------- base global de contactos ----------
+  // Métrica distinta a la de arriba: aquella son conversaciones de la ventana,
+  // esta es la base acumulada. Se refresca aparte; si falta, la sección no sale.
+
+  $('#foot-gen').innerHTML = `Generado el ${g.toLocaleString('es', { dateStyle: 'long', timeStyle: 'short' })}
+    desde la API v2 de GoHighLevel · location <span class="mono">qv9rF8ulG9G4xN53nl3v</span> ·
+    ${fmt(C.withMessages)} hilos de conversación leídos · ${fmt(d.failedMessages)} mensajes fallidos en la ventana.`;
+}
+
+if (DATA) { render(); initTips(); }
+else document.body.insertAdjacentHTML('beforeend',
+  '<div class="wrap" style="padding:40px 24px"><p>Sin datos. Ejecutá <span class="mono">python scripts/etl.py</span> y volvé a inyectar.</p></div>');
+</script>
