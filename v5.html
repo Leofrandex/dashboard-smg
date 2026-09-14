@@ -181,6 +181,8 @@ section h2{font-size:clamp(21px,2.7vw,28px);font-weight:600;max-width:26ch}
 .row .lbl{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .track{height:9px;background:var(--surface-2);border-radius:3px;overflow:hidden}
 .fill{height:100%;border-radius:3px;background:var(--accent)}
+/* Un canal declarado que no ha traido nada en el rango: se ve, atenuado. */
+.row.cero{opacity:.5}
 .row .val{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink);min-width:52px;text-align:right}
 
 /* ---------- timeline apilada ---------- */
@@ -1398,7 +1400,7 @@ function sortable(table, opt = {}) {
 function bars(el, items, opt = {}) {
   const max = Math.max(1, ...items.map(i => i.v));
   el.innerHTML = items.map(i => `
-    <div class="row"${i.tip ? ` data-tip="${esc(i.tip)}"` : ''}>
+    <div class="row${i.cero ? ' cero' : ''}"${i.tip ? ` data-tip="${esc(i.tip)}"` : ''}>
       <span class="lbl" title="${i.l}">${i.l}</span>
       <span class="track"><span class="fill" style="width:${(i.v / max * 100).toFixed(1)}%;background:${i.c || 'var(--accent)'}"></span></span>
       <span class="val">${i.t ?? fmt(i.v)}</span>
@@ -1495,9 +1497,12 @@ function render() {
   // miente. Dos: comparte bucket con la gráfica y la tabla, asi que las tres
   // suman siempre lo mismo. El campo de canal crudo seguia mezclando NO_SHOW y
   // CALL, que no son canales de entrada sino tipos de mensaje.
-  const porGrupo = GROUPS.map(g => ({
-    g, items: vis.filter(s => s.group === g)
-  })).filter(x => x.items.length).map(x => ({ g: x.g, t: totalsOf(x.items) }))
+  // Todos los canales, tambien los que no han traido nada en el rango. Antes
+  // solo salian los que tenian filas y la tarjeta callaba TikTok, YouTube y
+  // Campañas — que se lee como "no existen" en vez de "no trajeron nada". Los
+  // que estan a cero van al final y atenuados.
+  const porGrupo = GROUP_ORDER
+    .map(g => ({ g, t: totalsOf(vis.filter(s => s.group === g)) }))
     .sort((a, b) => b.t.dms - a.t.dms);
   const GRUPOS_TOTAL = porGrupo.reduce((a, x) => a + x.t.dms, 0) || 1;
 
@@ -1508,8 +1513,8 @@ function render() {
     `<span><i style="background:${groupColor(g)}"></i>${esc(g)}</span>`).join('');
 
   bars($('#chan-rows'), porGrupo.map(({ g, t }) => ({
-    l: g, v: t.dms, c: groupColor(g),
-    t: `${fmt(t.dms)}  ${pc(pcOf(t.dms, GRUPOS_TOTAL))}`,
+    l: g, v: t.dms, c: groupColor(g), cero: !t.dms,
+    t: t.dms ? `${fmt(t.dms)}  ${pc(pcOf(t.dms, GRUPOS_TOTAL))}` : '—',
     tip: tipHTML(g, [
       ["DM's", fmt(t.dms)],
       ['Del total visible', pc(pcOf(t.dms, GRUPOS_TOTAL))],
