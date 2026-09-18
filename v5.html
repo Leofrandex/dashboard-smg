@@ -837,7 +837,11 @@ const srcColor = {};
     });
 })();
 
-const ADDITIVE = ['dms','iniciadas','continuadas','msgs','sinRespuesta','traspasos'];
+// Tiene que llevar los mismos campos que funnel.ADDITIVE: esta lista es la que
+// recorta por rango. Un campo que falte aqui sale en cero al filtrar y entero
+// en historico, que es peor que no mostrarlo.
+const ADDITIVE = ['dms','iniciadas','continuadas','msgs','sinRespuesta',
+                  'traspasos','sinAtender'];
 const UNIQUE = ['contacts','contactsWithPhone','qualified','agendadas',
                 'agendadasBot','agendadasCloser'];
 
